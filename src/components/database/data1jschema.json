@@ -1,0 +1,236 @@
+
+
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "_id": {
+      "type": "object",
+      "properties": {
+        "$oid": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "$oid"
+      ]
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "artifacts": {
+      "type": "array",
+      "items": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "params": {
+      "type": "object",
+      "properties": {
+        "bootstrap": {
+          "type": "string"
+        },
+        "max_depth": {
+          "type": "string"
+        },
+        "max_samples": {
+          "type": "string"
+        },
+        "min_weight_fraction_leaf": {
+          "type": "string"
+        },
+        "max_leaf_nodes": {
+          "type": "string"
+        },
+        "class_weight": {
+          "type": "string"
+        },
+        "min_samples_leaf": {
+          "type": "string"
+        },
+        "random_state": {
+          "type": "string"
+        },
+        "min_impurity_decrease": {
+          "type": "string"
+        },
+        "verbose": {
+          "type": "string"
+        },
+        "n_estimators": {
+          "type": "string"
+        },
+        "criterion": {
+          "type": "string"
+        },
+        "oob_score": {
+          "type": "string"
+        },
+        "ccp_alpha": {
+          "type": "string"
+        },
+        "warm_start": {
+          "type": "string"
+        },
+        "max_features": {
+          "type": "string"
+        },
+        "n_jobs": {
+          "type": "string"
+        },
+        "min_samples_split": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "bootstrap",
+        "max_depth",
+        "max_samples",
+        "min_weight_fraction_leaf",
+        "max_leaf_nodes",
+        "class_weight",
+        "min_samples_leaf",
+        "random_state",
+        "min_impurity_decrease",
+        "verbose",
+        "n_estimators",
+        "criterion",
+        "oob_score",
+        "ccp_alpha",
+        "warm_start",
+        "max_features",
+        "n_jobs",
+        "min_samples_split"
+      ]
+    },
+    "metrics": {
+      "type": "object",
+      "properties": {
+        "training_score": {
+          "type": "object",
+          "properties": {
+            "$numberDouble": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "$numberDouble"
+          ]
+        },
+        "training_accuracy_score": {
+          "type": "object",
+          "properties": {
+            "$numberDouble": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "$numberDouble"
+          ]
+        },
+        "training_precision_score": {
+          "type": "object",
+          "properties": {
+            "$numberDouble": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "$numberDouble"
+          ]
+        },
+        "training_log_loss": {
+          "type": "object",
+          "properties": {
+            "$numberDouble": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "$numberDouble"
+          ]
+        },
+        "training_f1_score": {
+          "type": "object",
+          "properties": {
+            "$numberDouble": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "$numberDouble"
+          ]
+        },
+        "training_recall_score": {
+          "type": "object",
+          "properties": {
+            "$numberDouble": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "$numberDouble"
+          ]
+        },
+        "training_roc_auc_score": {
+          "type": "object",
+          "properties": {
+            "$numberDouble": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "$numberDouble"
+          ]
+        }
+      },
+      "required": [
+        "training_score",
+        "training_accuracy_score",
+        "training_precision_score",
+        "training_log_loss",
+        "training_f1_score",
+        "training_recall_score",
+        "training_roc_auc_score"
+      ]
+    },
+    "tags": {
+      "type": "object",
+      "properties": {
+        "estimator_class": {
+          "type": "string"
+        },
+        "estimator_name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "estimator_class",
+        "estimator_name"
+      ]
+    }
+  },
+  "required": [
+    "_id",
+    "run_id",
+    "artifacts",
+    "params",
+    "metrics",
+    "tags"
+  ]
+}
+
