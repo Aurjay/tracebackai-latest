@@ -5,22 +5,80 @@ import Button from '@mui/material/Button'
 import React from "react"
 import { Analytics } from '@vercel/analytics/react';
 import useFetchData from '../../components/database/getdatacomp'
+import ChatboxFrontend from 'src/components/chatbox_frontend';
 
 
 
 const Dashboard = () => {
   const { data, loading } = useFetchData()
-  console.log("datalogged:",data)
-    
+  console.log("datalogged:", data)
+
   return (
     <ApexChartWrapper>
-    <Card>
-      <Button container spacing={6}>
-        <h1>Dashboard</h1>
-        <Analytics />
-      </Button></Card>
+      
+      <Card sx={{
+        height: 400,
+        width: "40%",
+        display: 'inline-block',
+        p: "5%",
+        mx: "5%",
+        textAlign: 'center'
+      }} >
+        <Button container spacing={2} variant="contained" >
+
+          <h1>Eu-ai-act-viewer</h1>
+          <Analytics />          
+        </Button>
+      </Card>
+
+      
+
+      <Card sx={{
+        height: 400,
+        width: "40%",
+        display: 'inline-block',
+        p: "5%",
+        mx: "5%",
+        textAlign: 'center'
+      }}>
+        <Button container spacing={2} variant="contained" onClick={event =>  window.location.href="../chat_box_page"}
+ >
+
+          <h1>chact gpt</h1>
+          <Analytics />
+        </Button></Card>
+
+
+      <Card sx={{
+        height: 400,
+        width: "40%",
+        display: 'inline-block',
+        p: "5%",
+        mx: "5%",
+        textAlign: 'center'
+      }}>
+        <Button container spacing={2} variant="contained">
+
+          <h1>Flow Chart</h1>
+          <Analytics />
+        </Button></Card>
+
+      <Card sx={{
+        height: 400,
+        width: "40%",
+        display: 'inline-block',
+        p: "5%",
+        mx: "5%",
+        textAlign: 'center'
+      }}>
+        <Button container spacing={2} variant="contained">
+
+          <h1>Checklist</h1>
+          <Analytics />
+        </Button></Card>
     </ApexChartWrapper>
-    
+
+
 
   )
 }

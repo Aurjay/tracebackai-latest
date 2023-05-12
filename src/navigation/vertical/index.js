@@ -9,11 +9,11 @@ import GoogleCirclesExtended from 'mdi-material-ui/GoogleCirclesExtended'
 
 const navigation = () => {
   return [
-    // {
-    //   title: 'Dashboard',
-    //   icon: HomeOutline,
-    //   path: '/dashboard'
-    // }
+    {
+      title: 'Dashboard',
+      icon: HomeOutline,
+      path: '/dashboard'
+    }
 
   ]
 }

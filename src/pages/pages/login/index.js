@@ -160,80 +160,15 @@ const LoginPage = () => {
               {themeConfig.templateName}
             </Typography>
           </Box>
-          <Box sx={{ mb: 6 }}>
-            <Typography variant='h5' sx={{ fontWeight: 500, marginBottom: 2.0, ml: 1 }}>
+          {/* <Box sx={{ mb: 6 }}>
+            <Typography variant='h5' sx={{ fontWeight: 500, marginBottom: 2.0, ml: 10}}>
               Welcome to {themeConfig.templateName}
             </Typography>
-          </Box>
+          </Box> */}
 
           <form>
-            {/* <TextField autoFocus fullWidth id='email' label='Email' sx={{ marginBottom: 4 }} /> */}
-            <FormControl fullWidth sx={{ marginBottom: 4 }}>
-              <InputLabel htmlFor='auth-login-email'>Email</InputLabel>
-              <OutlinedInput
-                label='email'
-                value={email}
-                id='auth-login-email'
-                onChange={(rep) => setEmail(rep.target.value)}
-                placeholder="E-mail"
 
-                // type={values.showPassword ? 'text' : 'password'}
-
-              />
-            </FormControl>
-
-            <FormControl fullWidth>
-              <InputLabel htmlFor='auth-login-password'>Password</InputLabel>
-              <OutlinedInput
-                label='Password'
-                value={password}
-                id='auth-login-password'
-                onChange={(rep) => setPassword(rep.target.value)}
-                placeholder="password"
-                type={values.showPassword ? 'text' : 'password'}
-                endAdornment={
-                  <InputAdornment position='end'>
-                    <IconButton
-                      edge='end'
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      aria-label='toggle password visibility'
-                    >
-                      {values.showPassword ? <EyeOutline /> : <EyeOffOutline />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-            </FormControl>
-            <Box
-              sx={{ mb: 4, display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'space-between' }}
-            >
-              <FormControlLabel control={<Checkbox />} label='Remember Me' />
-              <Link passHref href=''>
-                <LinkStyled onClick={e => openInNewTabPasswordreset(e)}>Forgot Password?</LinkStyled>
-              </Link>
-              
-            </Box>
-            <Button
-              fullWidth
-              size='large'
-              variant='contained'
-              sx={{ marginBottom: 6 }}
-              onClick={handleLogin}
-            >
-              Login
-            </Button>
-            <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
-              <Typography variant='body2' sx={{ marginRight: 2 }}>
-                Need an account?
-              </Typography>
-              <Typography variant='body2'>
-                <Link passHref href='/pages/register'>
-                  <LinkStyled>Sign Up</LinkStyled>
-                </Link>
-              </Typography>
-            </Box>
-            <Divider sx={{ my: 5 }}>or</Divider>
+            <Divider sx={{ my: 1 }}>Login with Google Account</Divider>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               {/* <Link href='/' passHref>
                 <IconButton component='a' onClick={e => e.preventDefault()}>

@@ -116,26 +116,7 @@ const NotificationDropdown = () => {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuItem disableRipple>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-            <Typography sx={{ fontWeight: 600 }}>Notifications</Typography>
-            <Chip
-              size='small'
-              label='0 New'
-              color='primary'
-              sx={{ height: 20, fontSize: '0.75rem', fontWeight: 500, borderRadius: '10px' }}
-            />
-          </Box>
-        </MenuItem>
         
-        <MenuItem
-          disableRipple
-          sx={{ py: 3.5, borderBottom: 0, borderTop: theme => `1px solid ${theme.palette.divider}` }}
-        >
-          <Button fullWidth variant='contained' onClick={handleDropdownClose}>
-            Read All Notifications
-          </Button>
-        </MenuItem>
       </Menu>
     </Fragment>
   )

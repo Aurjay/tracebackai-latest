@@ -8,7 +8,7 @@ import {auth} from "../utils/firebase"
 import { useRouter } from 'next/router'
 import { Analytics } from '@vercel/analytics/react';
 
-const Dashboard = () => {
+const Home = () => {
   const [user,loading] = useAuthState(auth)
   const router = useRouter()
   if (loading){
@@ -31,4 +31,4 @@ const Dashboard = () => {
   )
 }
 
-export default Dashboard
+export default Home

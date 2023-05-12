@@ -1,6 +1,6 @@
 const themeConfig = {
   // ** Layout Configs
-  templateName: 'Traceback' /* App Name */,
+  templateName: 'Traceback.ai' /* App Name */,
   mode: 'light' /* light | dark */,
   contentWidth: 'full' /* full | boxed */,
   // ** Routing Configs
