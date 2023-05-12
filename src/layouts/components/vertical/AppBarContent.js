@@ -4,6 +4,8 @@ import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import InputAdornment from '@mui/material/InputAdornment'
+import Typography from '@mui/material/Typography/Typography'
+import themeConfig from 'src/configs/themeConfig'
 
 // ** Icons Imports
 import Menu from 'mdi-material-ui/Menu'
@@ -32,7 +34,7 @@ const AppBarContent = props => {
             <Menu />
           </IconButton>
         ) : null}
-        <TextField
+        {/* <TextField
           size='small'
           sx={{ '& .MuiOutlinedInput-root': { borderRadius: 4 } }}
           InputProps={{
@@ -42,7 +44,12 @@ const AppBarContent = props => {
               </InputAdornment>
             )
           }}
-        />
+        /> */}
+        <Box sx={{ mb: 6 }} >
+            <Typography  variant='h4' sx={{ fontWeight: 500, marginBottom: 2.0, ml: "400%",display: 'flex'}} >
+              {themeConfig.templateName}
+            </Typography>
+          </Box>
       </Box>
       <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>
         <ModeToggler settings={settings} saveSettings={saveSettings} />
