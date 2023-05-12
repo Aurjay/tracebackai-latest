@@ -44,7 +44,7 @@ const Dashboard = () => {
         <Button container spacing={2} variant="contained" onClick={event =>  window.location.href="../chat_box_page"}
  >
 
-          <h1>chact gpt</h1>
+          <h1>AI-act gpt</h1>
           <Analytics />
         </Button></Card>
 
