@@ -27,22 +27,19 @@ const ChatboxFrontend = () => {
 
     setPrompt('')
 
-    await new Promise(res => setTimeout(res, 1000))
+    // await new Promise(res => setTimeout(res, 1000))
 
     setMessages(messages => [
       ...messages,
       {
-        text: 'Just some hardcoded response bla bla bla...',
+        text: 'Just some hardcoded response bla bla sdfaasfafd...',
         id: new Date().toISOString(),
         author: 'ai'
       }
     ])
-    const response = await fetch('../../pages/api/completion', {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify({ prompt: prompt.trim() })
+    const response = await fetch('../../pages/api/users', {
+      method: 'GET',
+
     })
 
     const json = await response.json()
