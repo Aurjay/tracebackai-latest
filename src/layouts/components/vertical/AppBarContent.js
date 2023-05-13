@@ -6,6 +6,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import InputAdornment from '@mui/material/InputAdornment'
 import Typography from '@mui/material/Typography/Typography'
 import themeConfig from 'src/configs/themeConfig'
+import { Button } from '@mui/material'
 
 // ** Icons Imports
 import Menu from 'mdi-material-ui/Menu'
@@ -45,11 +46,19 @@ const AppBarContent = props => {
             )
           }}
         /> */}
-        <Box sx={{ mb: 6 }} >
-            <Typography  variant='h4' sx={{ fontWeight: 500, marginBottom: 2.0, ml: "400%",display: 'flex'}} >
+        <Box sx={{ mb: 6 }}>
+          <Button>
+            <Typography
+              variant='h4'
+              sx={{ fontWeight: 350, marginBottom: 0.1 }}
+              mx='30%'
+              mt={2}
+              onClick={event => (window.location.href = '../dashboard')}
+            >
               {themeConfig.templateName}
             </Typography>
-          </Box>
+          </Button>
+        </Box>
       </Box>
       <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>
         <ModeToggler settings={settings} saveSettings={saveSettings} />

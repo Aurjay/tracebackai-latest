@@ -1,4 +1,4 @@
-import overview_model from 'src/model/overview_model'
+import overview_model from 'src/model/act_viewer_model'
 
 const db = require('../database/connection')
 

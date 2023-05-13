@@ -15,7 +15,7 @@ const Dashboard = () => {
 
   return (
     <ApexChartWrapper>
-      
+
       <Card sx={{
         height: 400,
         width: "40%",
@@ -24,14 +24,14 @@ const Dashboard = () => {
         mx: "5%",
         textAlign: 'center'
       }} >
-        <Button container spacing={2} variant="contained" >
+        <Button container spacing={2} variant="contained" onClick={event =>  window.location.href="../act_viewer"}>
 
           <h1>Eu-ai-act-viewer</h1>
-          <Analytics />          
+          <Analytics />
         </Button>
       </Card>
 
-      
+
 
       <Card sx={{
         height: 400,
