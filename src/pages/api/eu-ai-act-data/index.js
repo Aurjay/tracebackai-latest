@@ -1,5 +1,6 @@
 import { MongoClient, ObjectId } from 'mongodb';
 
+
 const uri = 'mongodb+srv://Traceback-ai-db-user1:Ilikethanos007%40@traceback-ai-db.d5r5prs.mongodb.net/?retryWrites=true&w=majority';
 const client = new MongoClient(uri);
 

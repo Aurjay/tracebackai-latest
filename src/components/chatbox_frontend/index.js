@@ -1,15 +1,15 @@
 import Head from "next/head";
 import { useState } from "react";
+import { TextField, Button, Typography } from "@material-ui/core";
 
-
-export default function Home() {
+const Chatbox_frontend = () => {
   const [animalInput, setAnimalInput] = useState("");
-  const [result, setResult] = useState();
+  const [result, setResult] = useState("");
 
-  async function onSubmit(event) {
+  const onSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch("../../pages/api/testtt", {
+      const response = await fetch("../../api/gpt", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -24,8 +24,14 @@ export default function Home() {
 
       setResult(data.result);
       setAnimalInput("");
+
+      try {
+        console.log("Response data: ", await response.text());
+      } catch (error) {
+        console.error(error);
+      }
+
     } catch(error) {
-      // Consider implementing your own error handling logic here
       console.error(error);
       alert(error.message);
     }
@@ -35,23 +41,38 @@ export default function Home() {
     <div>
       <Head>
         <title>OpenAI Quickstart</title>
-        <link rel="icon" href="/dog.png" />
       </Head>
 
-      <main>
-        <h3>Name my pet</h3>
+      <main style={{ maxWidth: "600px", margin: "0 auto", padding: "20px" }}>
+        <Typography variant="h4" gutterBottom>
+          Name my pet
+        </Typography>
         <form onSubmit={onSubmit}>
-          <input
-            type="text"
-            name="animal"
-            placeholder="Enter an animal"
+          <TextField
+            fullWidth
+            variant="outlined"
+            label="Enter an animal"
             value={animalInput}
             onChange={(e) => setAnimalInput(e.target.value)}
+            style={{ marginBottom: "10px" }}
           />
-          <input type="submit" value="Generate names" />
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            style={{ marginRight: "10px" }}
+          >
+            Generate names
+          </Button>
         </form>
-        <div >{result}</div>
+        {result && (
+          <Typography variant="h6" style={{ marginTop: "20px" }}>
+            Generated names: {result}
+          </Typography>
+        )}
       </main>
     </div>
   );
-}
+};
+
+export default Chatbox_frontend;

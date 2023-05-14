@@ -1,7 +1,7 @@
 import { Configuration, OpenAIApi } from "openai";
 
 const configuration = new Configuration({
-  apiKey: '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',
+  apiKey: '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',
 });
 const openai = new OpenAIApi(configuration);
 
@@ -16,7 +16,7 @@ export default async function (req, res) {
     return;
   }
 
-  const animal = req.body.animal || '';
+  const animal = req.body.animal || 'Yellow';
   if (animal.trim().length === 0) {
     res.status(400).json({
       error: {
@@ -33,7 +33,8 @@ export default async function (req, res) {
       prompt: generatePrompt(animal),
       temperature: 0.6,
     });
-    res.status(200).json({ result: completion.data.choices[0].text });
+    const resultss = completion.data.choices[0].text;
+    res.status(200).json({ result: resultss });
   } catch(error) {
     // Consider adjusting the error handling logic for your use case
     if (error.response) {

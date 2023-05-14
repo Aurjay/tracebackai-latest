@@ -4,8 +4,7 @@ import Card from '@mui/material/Card'
 import Button from '@mui/material/Button'
 import React from "react"
 import { Analytics } from '@vercel/analytics/react';
-import ChatboxFrontend from 'src/components/chatbox_frontend';
-
+import Chatbox_frontend from 'src/components/chatbox_frontend';
 
 
 
@@ -22,7 +21,7 @@ const Chat_box_page = () => {
         mx: "5%",
         textAlign: 'center'
       }}>
-        <ChatboxFrontend/>
+        <Chatbox_frontend/>
       </Card>
 
 
