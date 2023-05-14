@@ -1,8 +1,9 @@
 import { Configuration, OpenAIApi } from "openai";
 
 const configuration = new Configuration({
-  apiKey: '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',
+  apiKey: process.env.OPENAI_API_KEY,
 });
+
 const openai = new OpenAIApi(configuration);
 
 export default async function (req, res) {
@@ -16,11 +17,11 @@ export default async function (req, res) {
     return;
   }
 
-  const animal = req.body.animal || 'Yellow';
-  if (animal.trim().length === 0) {
+  const prompt_text = req.body.prompt_text || 'EU-AI-ACT';
+  if (prompt_text.trim().length === 0) {
     res.status(400).json({
       error: {
-        message: "Please enter a valid animal",
+        message: "Please enter a valid prompt about EU-AI-ACT",
       }
     });
 
@@ -29,12 +30,14 @@ export default async function (req, res) {
 
   try {
     const completion = await openai.createCompletion({
-      model: "text-davinci-003",
-      prompt: generatePrompt(animal),
+      model: "text-davinci-002",
+      prompt: generatePrompt(prompt_text),
       temperature: 0.6,
+      max_tokens: 100,
     });
-    const resultss = completion.data.choices[0].text;
-    res.status(200).json({ result: resultss });
+
+    const result = completion.data.choices[0].text;
+    res.status(200).json({ result });
   } catch(error) {
     // Consider adjusting the error handling logic for your use case
     if (error.response) {
@@ -51,16 +54,13 @@ export default async function (req, res) {
   }
 }
 
-function generatePrompt(animal) {
-  const capitalizedAnimal =
-    animal[0].toUpperCase() + animal.slice(1).toLowerCase();
 
-  return `Suggest three names for an animal that is a superhero.
 
-Animal: Cat
-Names: Captain Sharpclaw, Agent Fluffball, The Incredible Feline
-Animal: Dog
-Names: Ruff the Protector, Wonder Canine, Sir Barks-a-Lot
-Animal: ${capitalizedAnimal}
-Names:`;
+function generatePrompt(prompt_text) {
+  const capitalized_prompt_text = prompt_text[0].toUpperCase() + prompt_text.slice(1).toLowerCase();
+
+  return `Answer the following question about the EU-AI-ACT:
+
+Q: ${capitalized_prompt_text}
+A:`;
 }

@@ -1,7 +1,6 @@
 import mongoose from 'mongoose'
 
 // const MONGO_URI = process.env.MONGODB_URI
-const MONGO_URI = "mongodb+srv://Nikolaus:passworddemo@ml-metadata.j2mktaf.mongodb.net/?retryWrites=true&w=majority"
 
 const db = mongoose.connection
 
