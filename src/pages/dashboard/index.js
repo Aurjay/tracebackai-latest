@@ -38,14 +38,14 @@ const Dashboard = () => {
       </Card>
 
       <Card sx={{ ...cardStyle, backgroundImage: 'none' }}>
-        <Button container spacing={2} variant="contained">
+        <Button container spacing={2} variant="contained" onClick={event => window.location.href = "../flow_chart"}>
           <h1>Flow Chart</h1>
           <Analytics />
         </Button>
       </Card>
 
       <Card sx={{ ...cardStyle, backgroundImage: 'none' }}>
-        <Button container spacing={2} variant="contained">
+        <Button container spacing={2} variant="contained" onClick={event => window.location.href = "../check_list"}>
           <h1>Checklist</h1>
           <Analytics />
         </Button>
