@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card } from "@material-ui/core";
 
 function MessageItem({ message }) {
@@ -40,23 +40,23 @@ export default function Home() {
 
     setPrompt("");
 
-    const response = await fetch("../../api/gpt", {
+    const response = await fetch("/api/gpt", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
       },
-      body: JSON.stringify({ prompt: prompt.trim() }),
+      body: JSON.stringify({ question: prompt.trim() }),
     });
 
     const json = await response.json();
 
     if (response.ok) {
-      console.log(json.result);
+      console.log(json.answer);
 
       setMessages((messages) => [
         ...messages,
         {
-          text: json.result,
+          text: json.answer,
           id: new Date().toISOString(),
           author: "ai",
         },
@@ -92,7 +92,7 @@ export default function Home() {
           }}
           onKeyPress={handleKeyPress}
           value={prompt}
-          placeholder="Ask a question about Eu-Ai-Act."
+          placeholder="Ask a question about EU-AI-ACT."
           rows={3}
         />
         <button onClick={handleSubmit} className="submit">

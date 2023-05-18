@@ -1,56 +1,70 @@
-// ** Styled Component Import
-import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts';
 import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
+import styled from 'styled-components';
 import React from 'react';
 import { Analytics } from '@vercel/analytics/react';
 import graphAvatar from '../../../public/images/avatars/graph.png';
 
+const DashboardWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 2rem;
+`;
+
+const CardWrapper = styled(Card)`
+  height: 180px;
+  width: calc(40% - 2rem);
+  margin: 1rem;
+  text-align: center;
+  background-image: url(${graphAvatar});
+  background-size: cover;
+  background-position: center;
+  background-color: #fff; /* Set a background color */
+  border-radius: 10px; /* Add border radius */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add box shadow */
+  transition: transform 0.3s ease-in-out;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+`;
+
+const ButtonStyled = styled(Button)`
+  width: 100%;
+`;
+
 const Dashboard = () => {
-
-
-  const cardStyle = {
-    height: 180,
-    width: '40%',
-    display: 'inline-block',
-    p: '5%',
-    mx: '5%',
-    textAlign: 'center',
-    backgroundImage: 'url(${graphAvatar})',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-  };
-
   return (
-    <ApexChartWrapper>
-      <Card sx={cardStyle}>
-        <Button container spacing={2} variant="contained" onClick={event => window.location.href = "../act_viewer_hardcoded"}>
+    <DashboardWrapper>
+      <CardWrapper>
+        <ButtonStyled container spacing={2} variant="contained" onClick={() => window.location.href = "../act_viewer_hardcoded"}>
           <h1>Eu-ai-act-viewer</h1>
           <Analytics />
-        </Button>
-      </Card>
+        </ButtonStyled>
+      </CardWrapper>
 
-      <Card sx={{ ...cardStyle, backgroundImage: 'none' }}>
-        <Button container spacing={2} variant="contained" onClick={event => window.location.href = "../chat_box_page"}>
+      <CardWrapper>
+        <ButtonStyled container spacing={2} variant="contained" onClick={() => window.location.href = "../chat_box_page"}>
           <h1>AI-act gpt</h1>
           <Analytics />
-        </Button>
-      </Card>
+        </ButtonStyled>
+      </CardWrapper>
 
-      <Card sx={{ ...cardStyle, backgroundImage: 'none' }}>
-        <Button container spacing={2} variant="contained" onClick={event => window.location.href = "../flow_chart"}>
+      <CardWrapper>
+        <ButtonStyled container spacing={2} variant="contained" onClick={() => window.location.href = "../flow_chart"}>
           <h1>Flow Chart</h1>
           <Analytics />
-        </Button>
-      </Card>
+        </ButtonStyled>
+      </CardWrapper>
 
-      <Card sx={{ ...cardStyle, backgroundImage: 'none' }}>
-        <Button container spacing={2} variant="contained" onClick={event => window.location.href = "../check_list"}>
+      <CardWrapper>
+        <ButtonStyled container spacing={2} variant="contained" onClick={() => window.location.href = "../check_list"}>
           <h1>Checklist</h1>
           <Analytics />
-        </Button>
-      </Card>
-    </ApexChartWrapper>
+        </ButtonStyled>
+      </CardWrapper>
+    </DashboardWrapper>
   );
 };
 
