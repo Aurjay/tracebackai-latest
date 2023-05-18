@@ -24,7 +24,7 @@ const Dashboard = () => {
   return (
     <ApexChartWrapper>
       <Card sx={cardStyle}>
-        <Button container spacing={2} variant="contained" onClick={event => window.location.href = "../act_viewer"}>
+        <Button container spacing={2} variant="contained" onClick={event => window.location.href = "../act_viewer_hardcoded"}>
           <h1>Eu-ai-act-viewer</h1>
           <Analytics />
         </Button>
