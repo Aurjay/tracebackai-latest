@@ -40,29 +40,32 @@ export default function Home() {
 
     setPrompt("");
 
-    const response = await fetch("/api/gpt", {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify({ question: prompt.trim() }),
-    });
-
-    const json = await response.json();
-
-    if (response.ok) {
-      console.log(json.answer);
-
-      setMessages((messages) => [
-        ...messages,
-        {
-          text: json.answer,
-          id: new Date().toISOString(),
-          author: "ai",
+    try {
+      const response = await fetch("http://127.0.0.1:5000/api/new-gpt/response.py", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
         },
-      ]);
-    } else {
-      console.warn(json?.error?.message);
+        body: JSON.stringify({ question: prompt.trim() }),
+      });
+
+      if (response.ok) {
+        const { answer } = await response.json();
+
+        setMessages((messages) => [
+          ...messages,
+          {
+            text: answer,
+            id: new Date().toISOString(),
+            author: "ai",
+          },
+        ]);
+      } else {
+        const { error } = await response.json();
+        console.warn(error);
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
