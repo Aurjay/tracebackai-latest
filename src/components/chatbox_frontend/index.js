@@ -1,21 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { Card } from "@material-ui/core";
+import CircularProgress from "@material-ui/core/CircularProgress";
+
 
 function MessageItem({ message }) {
   const [text, setText] = useState(
-    message.author === "human" ? message.text : ""
+    message.author === "You" ? message.text : ""
   );
 
   useEffect(() => {
-    setTimeout(() => {
-      setText(message.text.slice(0, text.length + 1));
+    const timer = setTimeout(() => {
+      setText((prevText) => {
+        if (prevText.length < message.text.length) {
+          return message.text.slice(0, prevText.length + 1);
+        } else {
+          return prevText;
+        }
+      });
     }, 10);
+
+    return () => clearTimeout(timer);
   }, [text, message.text]);
 
   return (
-    <div className="answer">
+    <div className={`answer ${message.author}`}>
       <div className={`author author-${message.author}`}>{message.author}:</div>
-      <div className="message">{text}</div>
+      <div className="message" style={{ animation: message.author === "ACT-GPT" ? "leftToRight 10s linear" : "" }}>{text}</div>
     </div>
   );
 }
@@ -23,6 +33,9 @@ function MessageItem({ message }) {
 export default function Home() {
   const [prompt, setPrompt] = useState("");
   const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [stopGenerating, setStopGenerating] = useState(false);
+  const [requestController, setRequestController] = useState(null); // Keep track of the request controller
 
   const handleSubmit = async () => {
     if (prompt.trim().length === 0) {
@@ -34,38 +47,49 @@ export default function Home() {
       {
         text: prompt.trim(),
         id: new Date().toISOString(),
-        author: "human",
+        author: "You",
       },
     ]);
 
     setPrompt("");
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/api/new-gpt/response.py", {
+      setLoading(true);
+
+      const controller = new AbortController(); // Create a new AbortController
+      setRequestController(controller); // Store the controller
+      console.log("dfafasdfafadfs",process.env.API_URL)
+
+      const response = await fetch(process.env.API_URL, { // Use the API_URL environment variable
         method: "POST",
         headers: {
           "Content-type": "application/json",
         },
         body: JSON.stringify({ question: prompt.trim() }),
+        signal: controller.signal, // Pass the signal to the fetch request
       });
 
-      if (response.ok) {
+      if (response.ok && !stopGenerating) {
         const { answer } = await response.json();
 
-        setMessages((messages) => [
-          ...messages,
-          {
-            text: answer,
-            id: new Date().toISOString(),
-            author: "ai",
-          },
-        ]);
+        if (!stopGenerating) { // Check the stopGenerating state again
+          setMessages((messages) => [
+            ...messages,
+            {
+              text: answer,
+              id: new Date().toISOString(),
+              author: "ACT-GPT",
+            },
+          ]);
+        }
       } else {
         const { error } = await response.json();
         console.warn(error);
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -77,13 +101,14 @@ export default function Home() {
   };
 
   const handleClear = () => {
-    setMessages((messages) => {
-      if (messages.length <= 2) {
-        return messages;
-      } else {
-        return messages.slice(-2);
-      }
-    });
+    setMessages([]);
+  };
+
+  const handleStopGenerating = () => {
+    if (requestController) {
+      requestController.abort(); // Abort the ongoing request
+    }
+    setStopGenerating(true);
   };
 
   return (
@@ -104,11 +129,14 @@ export default function Home() {
         <button onClick={handleClear} className="clear">
           Clear
         </button>
+        {loading && <CircularProgress className="loading-icon" />}
+        {!loading && !stopGenerating && (
+          <button onClick={handleStopGenerating} className="stop-generating">
+            Stop Generating
+          </button>
+        )}
       </div>
-      <Card
-        className="answers"
-        style={{ overflow: "auto", maxHeight: "70vh", padding: "1rem" }}
-      >
+      <Card className="answers" style={{ maxHeight: "400px", overflowY: "auto" }}>
         {messages.map((message) => (
           <MessageItem key={message.id} message={message} />
         ))}
