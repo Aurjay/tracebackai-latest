@@ -25,6 +25,7 @@ function MessageItem({ message }) {
   return (
     <div className={`answer ${message.author}`}>
       <div className={`author author-${message.author}`}>{message.author}:</div>
+      <div className="message" style={{ animation: message.author === "ACT-GPT" ? "leftToRight 10s linear" : "" }}>{text}</div>
     </div>
   );
 }
