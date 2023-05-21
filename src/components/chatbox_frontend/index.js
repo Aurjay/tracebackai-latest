@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { Card } from "@material-ui/core";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import React, { useEffect, useState } from 'react';
+import { Card } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 function MessageItem({ message }) {
-  const [text, setText] = useState(
-    message.author === "You" ? message.text : ""
-  );
+  const [text, setText] = useState(message.author === 'You' ? message.text : '');
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -24,17 +22,19 @@ function MessageItem({ message }) {
   return (
     <div className={`answer ${message.author}`}>
       <div className={`author author-${message.author}`}>{message.author}:</div>
-      <div className="message" style={{ animation: message.author === "ACT-GPT" ? "leftToRight 10s linear" : "" }}>{text}</div>
+      <div className='message' style={{ animation: message.author === 'ACT-GPT' ? 'leftToRight 10s linear' : '' }}>
+        {text}
+      </div>
     </div>
   );
 }
 
 export default function Home() {
-  const [prompt, setPrompt] = useState("");
+  const [prompt, setPrompt] = useState('');
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [stopGenerating, setStopGenerating] = useState(false);
-  const [requestController, setRequestController] = useState(null); // Keep track of the request controller
+  const [requestController, setRequestController] = useState(null);
 
   const handleSubmit = async () => {
     if (prompt.trim().length === 0) {
@@ -46,38 +46,37 @@ export default function Home() {
       {
         text: prompt.trim(),
         id: new Date().toISOString(),
-        author: "You",
+        author: 'You',
       },
     ]);
 
-    setPrompt("");
+    setPrompt('');
 
     try {
       setLoading(true);
 
-      const controller = new AbortController(); // Create a new AbortController
-      setRequestController(controller); // Store the controller
-      console.log("dfafasdfafadfs", process.env.API_URL);
+      const controller = new AbortController();
+      setRequestController(controller);
 
-      const response = await fetch(process.env.API_URL, { // Use the API_URL environment variable
-        method: "POST",
+      const response = await fetch(process.env.API_URL, {
+        method: 'POST',
         headers: {
-          "Content-type": "application/json",
+          'Content-type': 'application/json',
         },
         body: JSON.stringify({ question: prompt.trim() }),
-        signal: controller.signal, // Pass the signal to the fetch request
+        signal: controller.signal,
       });
 
       if (response.ok && !stopGenerating) {
         const { answer } = await response.json();
 
-        if (!stopGenerating) { // Check the stopGenerating state again
+        if (!stopGenerating) {
           setMessages((messages) => [
             ...messages,
             {
               text: answer,
               id: new Date().toISOString(),
-              author: "ACT-GPT",
+              author: 'ACT-GPT',
             },
           ]);
         }
@@ -93,7 +92,7 @@ export default function Home() {
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSubmit();
     }
@@ -105,42 +104,44 @@ export default function Home() {
 
   const handleStopGenerating = () => {
     if (requestController) {
-      requestController.abort(); // Abort the ongoing request
+      requestController.abort();
     }
     setStopGenerating(true);
-    setLoading(false); // Stop loading if the generation is stopped
+    setLoading(false);
   };
 
   return (
-    <div className="container">
-      <div className="inputContainer">
+    <div className='container'>
+      <div className='inputContainer'>
         <textarea
           onChange={(e) => {
             setPrompt(e.target.value);
           }}
           onKeyPress={handleKeyPress}
           value={prompt}
-          placeholder="Ask a question about EU-AI-ACT."
+          placeholder='Ask a question about EU-AI-ACT.'
           rows={3}
         />
-        <button onClick={handleSubmit} className="submit">
+        <button onClick={handleSubmit} className='submit'>
           Submit
         </button>
-        <button onClick={handleClear} className="clear">
+        <button onClick={handleClear} className='clear'>
           Clear
         </button>
-        {loading && <CircularProgress className="loading-icon" />}
+        {loading && <CircularProgress className='loading-icon' />}
         {!loading && !stopGenerating && (
-          <button onClick={handleStopGenerating} className="stop-generating">
-            StopGenerating
+          <button onClick={handleStopGenerating} className='stop-generating'>
+            Stop Generating
           </button>
         )}
       </div>
-      <div >
-        <Card className="answers" >
-          {messages.map((message) => (
-            <MessageItem key={message.id} message={message} />
-          ))}
+      <div className='answers-container'>
+        <Card className='answers' style={{ textAlign: 'left' }}>
+          <div className='answers-scroll'>
+            {messages.map((message, index) => (
+              <MessageItem key={message.id} message={message} index={index} />
+            ))}
+          </div>
         </Card>
       </div>
     </div>

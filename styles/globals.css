@@ -178,5 +178,7 @@ textarea {
 .author-ai {
   color: red;
 }
-
-
+.answers-container {
+  height: 400px; /* Set the desired height for the answer container */
+  overflow: auto;
+}
