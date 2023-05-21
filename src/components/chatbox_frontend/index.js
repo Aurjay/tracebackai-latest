@@ -2,11 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Card } from "@material-ui/core";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-
 function MessageItem({ message }) {
-  const [text, setText] = useState(
-    message.author === "You" ? message.text : ""
-  );
+  const [text, setText] = useState("");
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -20,12 +17,12 @@ function MessageItem({ message }) {
     }, 10);
 
     return () => clearTimeout(timer);
-  }, [text, message.text]);
+  }, [message.text]);
 
   return (
     <div className={`answer ${message.author}`}>
       <div className={`author author-${message.author}`}>{message.author}:</div>
-      <div className="message" style={{ animation: message.author === "ACT-GPT" ? "leftToRight 10s linear" : "" }}>{text}</div>
+      <div className="message">{text}</div>
     </div>
   );
 }
@@ -35,7 +32,7 @@ export default function Home() {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [stopGenerating, setStopGenerating] = useState(false);
-  const [requestController, setRequestController] = useState(null); // Keep track of the request controller
+  const [requestController, setRequestController] = useState(null);
 
   const handleSubmit = async () => {
     if (prompt.trim().length === 0) {
@@ -56,23 +53,22 @@ export default function Home() {
     try {
       setLoading(true);
 
-      const controller = new AbortController(); // Create a new AbortController
-      setRequestController(controller); // Store the controller
-      console.log("dfafasdfafadfs",process.env.API_URL)
+      const controller = new AbortController();
+      setRequestController(controller);
 
-      const response = await fetch(process.env.API_URL, { // Use the API_URL environment variable
+      const response = await fetch(process.env.API_URL, {
         method: "POST",
         headers: {
           "Content-type": "application/json",
         },
         body: JSON.stringify({ question: prompt.trim() }),
-        signal: controller.signal, // Pass the signal to the fetch request
+        signal: controller.signal,
       });
 
       if (response.ok && !stopGenerating) {
         const { answer } = await response.json();
 
-        if (!stopGenerating) { // Check the stopGenerating state again
+        if (!stopGenerating) {
           setMessages((messages) => [
             ...messages,
             {
@@ -106,7 +102,7 @@ export default function Home() {
 
   const handleStopGenerating = () => {
     if (requestController) {
-      requestController.abort(); // Abort the ongoing request
+      requestController.abort();
     }
     setStopGenerating(true);
   };
