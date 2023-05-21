@@ -132,7 +132,7 @@ export default function Home() {
         {loading && <CircularProgress className="loading-icon" />}
         {!loading && !stopGenerating && (
           <button onClick={handleStopGenerating} className="stop-generating">
-            Stop Generating
+            StopGenerating
           </button>
         )}
       </div>
