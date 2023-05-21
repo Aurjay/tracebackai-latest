@@ -4,7 +4,7 @@ module.exports = {
   trailingSlash: true,
   reactStrictMode: false,
   env: {
-    API_URL:'https://tracebackgptimagev2-4t2r2e6xka-uc.a.run.app/api/new-gpt',
+    API_URL:'https://tracebackaigptv4-4t2r2e6xka-uc.a.run.app/api/new-gpt',
   },
   webpack: config => {
     config.resolve.alias = {

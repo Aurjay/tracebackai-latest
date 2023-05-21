@@ -22,11 +22,11 @@ const CardWrapper = styled(Card)`
   background-position: center;
   background-color: #fff; /* Set a background color */
   border-radius: 10px; /* Add border radius */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add box shadow */
-  transition: transform 0.3s ease-in-out;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7); /* Add box shadow */
+  transition: transform 0.2s ease-in-out;
 
   &:hover {
-    transform: scale(1.05);
+    transform: scale(1.09);
   }
 `;
 

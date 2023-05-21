@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Card } from "@material-ui/core";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-
 function MessageItem({ message }) {
   const [text, setText] = useState(
     message.author === "You" ? message.text : ""
@@ -58,7 +57,7 @@ export default function Home() {
 
       const controller = new AbortController(); // Create a new AbortController
       setRequestController(controller); // Store the controller
-      console.log("dfafasdfafadfs",process.env.API_URL)
+      console.log("dfafasdfafadfs", process.env.API_URL);
 
       const response = await fetch(process.env.API_URL, { // Use the API_URL environment variable
         method: "POST",
@@ -109,6 +108,7 @@ export default function Home() {
       requestController.abort(); // Abort the ongoing request
     }
     setStopGenerating(true);
+    setLoading(false); // Stop loading if the generation is stopped
   };
 
   return (
@@ -136,11 +136,13 @@ export default function Home() {
           </button>
         )}
       </div>
-      <Card className="answers" style={{ maxHeight: "400px", overflowY: "auto" }}>
-        {messages.map((message) => (
-          <MessageItem key={message.id} message={message} />
-        ))}
-      </Card>
+      <div >
+        <Card className="answers" style={{ width: "900px", maxHeight: "400px", overflowY: "auto" }}>
+          {messages.map((message) => (
+            <MessageItem key={message.id} message={message} />
+          ))}
+        </Card>
+      </div>
     </div>
   );
 }
