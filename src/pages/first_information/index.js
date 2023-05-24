@@ -10,7 +10,7 @@ const FormCard = styled(Card)`
   max-width: 600px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
 `;
 
 const Question = styled.div`
