@@ -5,12 +5,12 @@ import styled from 'styled-components';
 
 const FormCard = styled(Card)`
   padding: 1rem;
-  margin: 1rem auto;
+  margin: 1rem ;
   width: 80%;
   max-width: 600px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
 `;
 
 const Question = styled.div`
@@ -50,7 +50,8 @@ const FormComponent = () => {
 
   return (
     <FormCard>
-    <h2>Fill the following in your own words.</h2> 
+        <h2>Fill the form in your own words.
+        </h2>
       <form onSubmit={handleSubmit}>
         <Question>
           <label htmlFor="name">Name:</label>
@@ -133,7 +134,7 @@ const FormComponent = () => {
           />
         </Question>
 
-        <button type="submit" >Submit</button>
+        <button type="submit">Submit</button>
       </form>
     </FormCard>
   );
