@@ -12,6 +12,7 @@ const FormCard = styled(Card)`
   flex-direction: column;
   align-items: center;
 `;
+
 const Question = styled.div`
   margin-bottom: 1rem;
 `;
