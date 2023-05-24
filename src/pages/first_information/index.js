@@ -1,134 +1,141 @@
-import Button from '@mui/material/Button';
+import React, { useState } from 'react';
+import Card from '@mui/material/Card';
+import TextField from '@mui/material/TextField';
 import styled from 'styled-components';
-import React from 'react';
-import { Analytics } from '@vercel/analytics/react';
 
-const NavigationBar = styled.nav`
+const FormCard = styled(Card)`
+  padding: 1rem;
+  margin: 1rem auto;
+  width: 80%;
+  max-width: 600px;
   display: flex;
-  justify-content: flex-start;
+  flex-direction: column;
   align-items: center;
-  padding: 1rem;
-  background-color: #f5f5f5;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
-
-const NavLink = styled(Button)`
-  margin-right: 1rem;
-  transition: background-color 0.2s ease-in-out;
-
-  &:hover {
-    background-color: #e0e0e0;
-  }
-`;
-
-const MainSection = styled.section`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  padding: 1rem;
-`;
-
-const DashboardCard = styled.div`
-  flex-basis: 25%;
-  min-width: 300px;
-  padding: 1rem;
+const Question = styled.div`
   margin-bottom: 1rem;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  height: calc(50vh - 2rem);
-  transition: transform 0.2s ease-in-out;
-
-  &:hover {
-    transform: scale(1.02);
-  }
 `;
 
-const RecommendationCard = styled.div`
-  flex-basis: calc(75% - 1rem);
-  min-width: 300px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  height: calc(50vh - 2rem);
-  
+const AnswerField = styled(TextField)`
+  width: 100%;
 `;
 
-const FirstInfoButton = styled(Button)`
-  background-color: #d61e1e !important;
-  color: #fff !important;
-  font-size: 1.1rem;
-  
-`;
+const FormComponent = () => {
+  const [name, setName] = useState('');
+  const [usecase, setUsecase] = useState('');
+  const [projectType, setProjectType] = useState('');
+  const [dataGeneration, setDataGeneration] = useState('');
+  const [dataPreprocessing, setDataPreprocessing] = useState('');
+  const [training, setTraining] = useState('');
+  const [postProcessing, setPostProcessing] = useState('');
+  const [deployment, setDeployment] = useState('');
+  const [concernedPart, setConcernedPart] = useState('');
 
-const RecommendationItem = styled.div`
-  padding: 0.5rem;
-  margin-bottom: 0.5rem;
-  background-color: #f9f9f9;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease-in-out;
+  // Function to update the Google Cloud Text document
+  const updateTextDocument = () => {
+    // Perform the necessary steps to update the text document in Google Cloud
+    // This could involve making an API call or using a cloud storage library
+    // to write the updated answers to the text document
+    // Ensure proper authentication and authorization is in place
+  };
 
-  &:hover {
-    transform: scale(1.015);
-  }
-`;
+  // Event handler for form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-const Dashboard = () => {
+    // Update the Google Cloud Text document
+    updateTextDocument();
+  };
+
   return (
-    <>
-      <NavigationBar>
-        <NavLink variant="text" onClick={() => window.location.href = "../act_viewer_hardcoded"}>
-          Eu-ai-act-viewer
-        </NavLink>
-        <NavLink variant="text" onClick={() => window.location.href = "../chat_box_page"}>
-          AI-act gpt
-        </NavLink>
-        <NavLink variant="text" onClick={() => window.location.href = "../flow_chart"}>
-          Flow Chart
-        </NavLink>
-        <NavLink variant="text" onClick={() => window.location.href = "../check_list"}>
-          Checklist
-        </NavLink>
-        <NavLink variant="text" onClick={() => window.location.href = "../first_information"}>
-          <FirstInfoButton variant="contained">F.I.R</FirstInfoButton>
-        </NavLink>
-      </NavigationBar>
+    <FormCard>
+    <h2>Fill the following in your own words.</h2> 
+      <form onSubmit={handleSubmit}>
+        <Question>
+          <label htmlFor="name">Name:</label>
+          <AnswerField
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </Question>
 
-      <MainSection>
-        <DashboardCard>
-          <h2>Project Dashboard</h2>
-          <p>Graphs and statistics</p>
-        </DashboardCard>
+        <Question>
+          <label htmlFor="usecase">Usecase:</label>
+          <AnswerField
+            id="usecase"
+            value={usecase}
+            onChange={(e) => setUsecase(e.target.value)}
+          />
+        </Question>
 
-        <RecommendationCard>
-          <h2>Recommendations</h2>
-          <div>
-            <RecommendationItem>
-              <h3>Recommendation 1</h3>
-              <p>Some details about Recommendation 1</p>
-            </RecommendationItem>
+        <Question>
+          <label htmlFor="projectType">Type of the AI Project:</label>
+          <AnswerField
+            id="projectType"
+            value={projectType}
+            onChange={(e) => setProjectType(e.target.value)}
+          />
+        </Question>
 
-            <RecommendationItem>
-              <h3>Recommendation 2</h3>
-              <p>Some details about Recommendation 2</p>
-            </RecommendationItem>
+        <Question>
+          <label htmlFor="dataGeneration">Data Generation and Accumulation:</label>
+          <AnswerField
+            id="dataGeneration"
+            value={dataGeneration}
+            onChange={(e) => setDataGeneration(e.target.value)}
+          />
+        </Question>
 
-            <RecommendationItem>
-              <h3>Recommendation 3</h3>
-              <p>Some details about Recommendation 3</p>
-            </RecommendationItem>
+        <Question>
+          <label htmlFor="dataPreprocessing">Data Preprocessing:</label>
+          <AnswerField
+            id="dataPreprocessing"
+            value={dataPreprocessing}
+            onChange={(e) => setDataPreprocessing(e.target.value)}
+          />
+        </Question>
 
-            <RecommendationItem>
-              <h3>Recommendation 4</h3>
-              <p>Some details about Recommendation 4</p>
-            </RecommendationItem>
+        <Question>
+          <label htmlFor="training">Training:</label>
+          <AnswerField
+            id="training"
+            value={training}
+            onChange={(e) => setTraining(e.target.value)}
+          />
+        </Question>
 
-            {/* Add more recommendation items as necessary */}
-          </div>
-        </RecommendationCard>
-      </MainSection>
-    </>
+        <Question>
+          <label htmlFor="postProcessing">Post Processing:</label>
+          <AnswerField
+            id="postProcessing"
+            value={postProcessing}
+            onChange={(e) => setPostProcessing(e.target.value)}
+          />
+        </Question>
+
+        <Question>
+          <label htmlFor="deployment">Deployment:</label>
+          <AnswerField
+            id="deployment"
+            value={deployment}
+            onChange={(e) => setDeployment(e.target.value)}
+          />
+        </Question>
+
+        <Question>
+          <label htmlFor="concernedPart">Part of the pipeline that concerns you:</label>
+          <AnswerField
+            id="concernedPart"
+            value={concernedPart}
+            onChange={(e) => setConcernedPart(e.target.value)}
+          />
+        </Question>
+
+        <button type="submit" >Submit</button>
+      </form>
+    </FormCard>
   );
 };
 
-export default Dashboard;
+export default FormComponent;
