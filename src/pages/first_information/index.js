@@ -34,131 +34,162 @@ const SubmitButton = styled.button`
   cursor: pointer;
 `;
 
+const Popup = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 2rem;
+  background-color: #ffffff;
+  border: 1px solid #000000;
+  border-radius: 4px;
+  z-index: 999;
+`;
+
 const FormComponent = () => {
-  const [name, setName] = useState('');
-  const [usecase, setUsecase] = useState('');
-  const [projectType, setProjectType] = useState('');
-  const [dataGeneration, setDataGeneration] = useState('');
-  const [dataPreprocessing, setDataPreprocessing] = useState('');
-  const [training, setTraining] = useState('');
-  const [postProcessing, setPostProcessing] = useState('');
-  const [deployment, setDeployment] = useState('');
-  const [concernedPart, setConcernedPart] = useState('');
-  const [submissionSuccess, setSubmissionSuccess] = useState(false);
+  const [formValues, setFormValues] = useState({
+    name: '',
+    usecase: '',
+    projectType: '',
+    dataGeneration: '',
+    dataPreprocessing: '',
+    training: '',
+    postProcessing: '',
+    deployment: '',
+    concernedPart: '',
+  });
 
-  // Function to update the Google Cloud Text document
-  const updateTextDocument = () => {
-    // Perform the necessary steps to update the text document in Google Cloud
-    // This could involve making an API call or using a cloud storage library
-    // to write the updated answers to the text document
-    // Ensure proper authentication and authorization is in place
+  const [showPopup, setShowPopup] = useState(false);
+  const [isDataSent, setIsDataSent] = useState(false);
 
-    // Simulating successful submission
-    setSubmissionSuccess(true);
+  const updateTextDocument = async () => {
+    const formData = new FormData();
+    for (const key in formValues) {
+      formData.append(key, formValues[key]);
+    }
+
+    try {
+      const response = await fetch('https://storage.googleapis.com/text-file-fir-007/FIR-GPT', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        setIsDataSent(true);
+      } else {
+        setIsDataSent(false);
+      }
+    } catch (error) {
+      console.error('An error occurred while updating the text document:', error);
+      setIsDataSent(false);
+    } finally {
+      setShowPopup(true);
+    }
   };
 
-  // Event handler for form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Update the Google Cloud Text document
     updateTextDocument();
+  };
+
+  const handleChange = (e) => {
+    setFormValues({
+      ...formValues,
+      [e.target.id]: e.target.value,
+    });
+  };
+
+  const handleButtonClick = () => {
+    const form = document.getElementById('form');
+    form.dispatchEvent(new Event('submit'));
+  };
+
+  const closePopup = () => {
+    setShowPopup(false);
   };
 
   return (
     <FormCard>
-      <h2 style={{ textAlign: 'center' }}>Fill the form in your own words.</h2>
-      <form onSubmit={handleSubmit}>
-        <Question>
-          <label htmlFor="name">Name:</label>
-          <AnswerField
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </Question>
+    <h2 style={{ textAlign: 'center' }}>Fill the form in your own words.</h2>
+    <form id="form" onSubmit={handleSubmit}>
+      <Question>
+        <label htmlFor="name">Project Name:</label>
+        <AnswerField id="name" value={formValues.name} onChange={handleChange} />
+      </Question>
 
-        <Question>
-          <label htmlFor="usecase">Usecase:</label>
-          <AnswerField
-            id="usecase"
-            value={usecase}
-            onChange={(e) => setUsecase(e.target.value)}
-          />
-        </Question>
+      <Question>
+        <label htmlFor="usecase">AI Usecase (Domain):</label>
+        <AnswerField id="usecase" value={formValues.usecase} onChange={handleChange} />
+      </Question>
 
-        <Question>
-          <label htmlFor="projectType">Type of the AI Project:</label>
-          <AnswerField
-            id="projectType"
-            value={projectType}
-            onChange={(e) => setProjectType(e.target.value)}
-          />
-        </Question>
+      <Question>
+        <label htmlFor="projectType">Type of the AI Project:</label>
+        <AnswerField
+          id="projectType"
+          value={formValues.projectType}
+          onChange={handleChange}
+        />
+      </Question>
 
-        <Question>
-          <label htmlFor="dataGeneration">Data Generation and Accumulation:</label>
-          <AnswerField
-            id="dataGeneration"
-            value={dataGeneration}
-            onChange={(e) => setDataGeneration(e.target.value)}
-          />
-        </Question>
+      <Question>
+        <label htmlFor="dataGeneration">Data Generation and Accumulation:</label>
+        <AnswerField
+          id="dataGeneration"
+          value={formValues.dataGeneration}
+          onChange={handleChange}
+        />
+      </Question>
 
-        <Question>
-          <label htmlFor="dataPreprocessing">Data Preprocessing:</label>
-          <AnswerField
-            id="dataPreprocessing"
-            value={dataPreprocessing}
-            onChange={(e) => setDataPreprocessing(e.target.value)}
-          />
-        </Question>
+      <Question>
+        <label htmlFor="dataPreprocessing">Data Preprocessing:</label>
+        <AnswerField
+          id="dataPreprocessing"
+          value={formValues.dataPreprocessing}
+          onChange={handleChange}
+        />
+      </Question>
 
-        <Question>
-          <label htmlFor="training">Training:</label>
-          <AnswerField
-            id="training"
-            value={training}
-            onChange={(e) => setTraining(e.target.value)}
-          />
-        </Question>
+      <Question>
+        <label htmlFor="training">Training:</label>
+        <AnswerField id="training" value={formValues.training} onChange={handleChange} />
+      </Question>
 
-        <Question>
-          <label htmlFor="postProcessing">Post Processing:</label>
-          <AnswerField
-            id="postProcessing"
-            value={postProcessing}
-            onChange={(e) => setPostProcessing(e.target.value)}
-          />
-        </Question>
+      <Question>
+        <label htmlFor="postProcessing">Post Processing:</label>
+        <AnswerField
+          id="postProcessing"
+          value={formValues.postProcessing}
+          onChange={handleChange}
+        />
+      </Question>
 
-        <Question>
-          <label htmlFor="deployment">Deployment:</label>
-          <AnswerField
-            id="deployment"
-            value={deployment}
-            onChange={(e) => setDeployment(e.target.value)}
-          />
-        </Question>
+      <Question>
+        <label htmlFor="deployment">Deployment:</label>
+        <AnswerField id="deployment" value={formValues.deployment} onChange={handleChange} />
+      </Question>
 
-        <Question>
-          <label htmlFor="concernedPart">Part of the pipeline that concerns you:</label>
-          <AnswerField
-            id="concernedPart"
-            value={concernedPart}
-            onChange={(e) => setConcernedPart(e.target.value)}
-          />
-        </Question>
+      <Question>
+        <label htmlFor="concernedPart">Part of the pipeline that concerns you:</label>
+        <AnswerField
+          id="concernedPart"
+          value={formValues.concernedPart}
+          onChange={handleChange}
+        />
+      </Question>
 
-        <SubmitButton type="submit">Submit</SubmitButton>
-      </form>
+      <SubmitButton type="button" onClick={handleButtonClick}>
+        Submit
+      </SubmitButton>
+    </form>
 
-      {submissionSuccess && (
-        <div style={{ marginTop: '2rem', textAlign: 'center' }}>
-          Submission successful!
-        </div>
-      )}
-    </FormCard>
+    {showPopup && (
+      <Popup>
+        {isDataSent ? 'Data sent!' : 'Data not sent!'}
+        <br />
+        <button onClick={closePopup}>Close</button>
+      </Popup>
+    )}
+  </FormCard>
   );
 };
 
