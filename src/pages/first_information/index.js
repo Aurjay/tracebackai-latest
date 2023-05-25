@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Card from '@mui/material/Card';
 import TextField from '@mui/material/TextField';
 import styled from 'styled-components';
+import NoSsr from '@mui/material/NoSsr';
 
 const FormCard = styled(Card)`
   padding: 2rem;
@@ -57,21 +58,39 @@ const FormComponent = () => {
     postProcessing: '',
     deployment: '',
     concernedPart: '',
+    answer: '', // Include the answer field in formValues state
   });
 
   const [showPopup, setShowPopup] = useState(false);
   const [isDataSent, setIsDataSent] = useState(false);
+  const [fileContent, setFileContent] = useState('');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/api/FIR_text_api');
+        const data = await response.json();
+        if (response.ok) {
+          setFileContent(data.data);
+        } else {
+          console.error('An error occurred while fetching FIR-GPT.txt:', data.error);
+        }
+      } catch (error) {
+        console.error('An error occurred while fetching FIR-GPT.txt:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const updateTextDocument = async () => {
-    const formData = new FormData();
-    for (const key in formValues) {
-      formData.append(key, formValues[key]);
-    }
-
     try {
-      const response = await fetch('https://storage.googleapis.com/text-file-fir-007/FIR-GPT', {
+      const response = await fetch('/api/updateFirData', {
         method: 'POST',
-        body: formData,
+        headers: {
+          'Content-Type': 'application/json', // Change the content type to 'application/json'
+        },
+        body: JSON.stringify(formValues), // Send the form values as JSON in the request body
       });
 
       if (response.ok) {
@@ -109,87 +128,82 @@ const FormComponent = () => {
   };
 
   return (
-    <FormCard>
-    <h2 style={{ textAlign: 'center' }}>Fill the form in your own words.</h2>
-    <form id="form" onSubmit={handleSubmit}>
-      <Question>
-        <label htmlFor="name">Project Name:</label>
-        <AnswerField id="name" value={formValues.name} onChange={handleChange} />
-      </Question>
+    <NoSsr>
+      <FormCard>
+        <h2 style={{ textAlign: 'center' }}>Fill the form in your own words.</h2>
+        <form id="form" onSubmit={handleSubmit}>
+          <Question>
+            <label htmlFor="name">Project Name:</label>
+            <AnswerField id="name" value={formValues.name} onChange={handleChange} />
+          </Question>
 
-      <Question>
-        <label htmlFor="usecase">AI Usecase (Domain):</label>
-        <AnswerField id="usecase" value={formValues.usecase} onChange={handleChange} />
-      </Question>
+          <Question>
+            <label htmlFor="usecase">AI Usecase (Domain):</label>
+            <AnswerField id="usecase" value={formValues.usecase} onChange={handleChange} />
+          </Question>
 
-      <Question>
-        <label htmlFor="projectType">Type of the AI Project:</label>
-        <AnswerField
-          id="projectType"
-          value={formValues.projectType}
-          onChange={handleChange}
-        />
-      </Question>
+          <Question>
+            <label htmlFor="projectType">Type of the AI Project:</label>
+            <AnswerField id="projectType" value={formValues.projectType} onChange={handleChange} />
+          </Question>
 
-      <Question>
-        <label htmlFor="dataGeneration">Data Generation and Accumulation:</label>
-        <AnswerField
-          id="dataGeneration"
-          value={formValues.dataGeneration}
-          onChange={handleChange}
-        />
-      </Question>
+          <Question>
+            <label htmlFor="dataGeneration">Data Generation and Accumulation:</label>
+            <AnswerField
+              id="dataGeneration"
+              value={formValues.dataGeneration}
+              onChange={handleChange}
+            />
+          </Question>
 
-      <Question>
-        <label htmlFor="dataPreprocessing">Data Preprocessing:</label>
-        <AnswerField
-          id="dataPreprocessing"
-          value={formValues.dataPreprocessing}
-          onChange={handleChange}
-        />
-      </Question>
+          <Question>
+            <label htmlFor="dataPreprocessing">Data Preprocessing:</label>
+            <AnswerField
+              id="dataPreprocessing"
+              value={formValues.dataPreprocessing}
+              onChange={handleChange}
+            />
+          </Question>
 
-      <Question>
-        <label htmlFor="training">Training:</label>
-        <AnswerField id="training" value={formValues.training} onChange={handleChange} />
-      </Question>
+          <Question>
+            <label htmlFor="training">Training:</label>
+            <AnswerField id="training" value={formValues.training} onChange={handleChange} />
+          </Question>
 
-      <Question>
-        <label htmlFor="postProcessing">Post Processing:</label>
-        <AnswerField
-          id="postProcessing"
-          value={formValues.postProcessing}
-          onChange={handleChange}
-        />
-      </Question>
+          <Question>
+            <label htmlFor="postProcessing">Post Processing:</label>
+            <AnswerField id="postProcessing" value={formValues.postProcessing} onChange={handleChange} />
+          </Question>
 
-      <Question>
-        <label htmlFor="deployment">Deployment:</label>
-        <AnswerField id="deployment" value={formValues.deployment} onChange={handleChange} />
-      </Question>
+          <Question>
+            <label htmlFor="deployment">Deployment:</label>
+            <AnswerField id="deployment" value={formValues.deployment} onChange={handleChange} />
+          </Question>
 
-      <Question>
-        <label htmlFor="concernedPart">Part of the pipeline that concerns you:</label>
-        <AnswerField
-          id="concernedPart"
-          value={formValues.concernedPart}
-          onChange={handleChange}
-        />
-      </Question>
+          <Question>
+            <label htmlFor="concernedPart">Part of the pipeline that concerns you:</label>
+            <AnswerField id="concernedPart" value={formValues.concernedPart} onChange={handleChange} />
+          </Question>
 
-      <SubmitButton type="button" onClick={handleButtonClick}>
-        Submit
-      </SubmitButton>
-    </form>
+          <Question>
+            <label htmlFor="answer">Answer:</label> {/* Add the answer field */}
+            <AnswerField id="answer" value={formValues.answer} onChange={handleChange} /> {/* Bind the value and onChange event */}
+          </Question>
 
-    {showPopup && (
-      <Popup>
-        {isDataSent ? 'Data sent!' : 'Data not sent!'}
-        <br />
-        <button onClick={closePopup}>Close</button>
-      </Popup>
-    )}
-  </FormCard>
+          <SubmitButton type="button" onClick={handleButtonClick}>
+            Submit
+          </SubmitButton>
+        </form>
+
+        {showPopup && (
+          <Popup>
+            {isDataSent ? 'Data sent!' : 'Data not sent!'}
+            <br />
+            <button onClick={closePopup}>Close</button>
+          </Popup>
+        )}
+      </FormCard>
+    </NoSsr>
   );
 };
 

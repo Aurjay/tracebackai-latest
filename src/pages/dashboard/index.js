@@ -2,6 +2,8 @@ import Button from '@mui/material/Button';
 import styled from 'styled-components';
 import React from 'react';
 import { Analytics } from '@vercel/analytics/react';
+import NoSsr from '@mui/material/NoSsr';
+
 
 const NavigationBar = styled.nav`
   display: flex;
@@ -80,6 +82,7 @@ const RecommendationItem = styled.div`
 
 const Dashboard = () => {
   return (
+    <NoSsr>
     <>
       <NavigationBar>
         <NavLink variant="text" onClick={() => window.location.href = "../act_viewer_hardcoded"}>
@@ -133,6 +136,7 @@ const Dashboard = () => {
         </RecommendationCard>
       </MainSection>
     </>
+    </NoSsr>
   );
 };
 
