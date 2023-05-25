@@ -43,6 +43,7 @@
     "mongoose-gen": "^2.1.0",
     "mongoosify": "^1.0.0",
     "next": "^12.3.3",
+    "next-connect": "^1.0.0",
     "nookies": "^2.5.2",
     "nprogress": "^0.2.0",
     "openai": "^3.2.1",

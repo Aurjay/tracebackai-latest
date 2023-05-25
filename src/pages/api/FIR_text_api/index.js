@@ -1,20 +1,20 @@
 import { Storage } from '@google-cloud/storage';
 
+const storage = new Storage({
+  keyFilename: 'traceback-ai-FIR.json', // Update with your own service account key file path
+  projectId: 'traceback-ai-gpt', // Update with your Google Cloud project ID
+});
+
+const bucketName = 'fir-text-007';
+const fileName = 'FIR-GPT.txt';
+
 export default async function handler(req, res) {
-  const storage = new Storage({
-    keyFilename: 'traceback-ai-FIR.json', // Update with your own service account key file path
-    projectId: 'traceback-ai-gpt', // Update with your Google Cloud project ID
-  });
-
-  const bucketName = 'fir-text-007';
-  const fileName = 'FIR-GPT.txt';
-
   try {
     const bucket = storage.bucket(bucketName);
     const file = bucket.file(fileName);
 
     const formValues = {
-      name: req.body.name || 'free',
+      name: req.body.name || '',
       usecase: req.body.usecase || '',
       projectType: req.body.projectType || '',
       dataGeneration: req.body.dataGeneration || '',
@@ -25,6 +25,11 @@ export default async function handler(req, res) {
       concernedPart: req.body.concernedPart || '',
       answer: req.body.answer || '', // Include the answer field value
     };
+
+    // Log form values
+    for (const [question, answer] of Object.entries(formValues)) {
+      console.log("question and answer ", question, answer);
+    }
 
     // Generate the text content with form values
     let textContent = '';
@@ -45,3 +50,28 @@ export default async function handler(req, res) {
     res.status(500).json({ error: 'Error updating data' });
   }
 }
+
+const updateTextDocument = async (formValues, setIsDataSent, setShowPopup) => {
+  try {
+    console.log('Form Values:', formValues);
+
+    const response = await fetch('/api/FIR_text_api', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formValues),
+    });
+
+    if (response.ok) {
+      setIsDataSent(true);
+    } else {
+      setIsDataSent(false);
+    }
+  } catch (error) {
+    console.error('An error occurred while updating the text document:', error);
+    setIsDataSent(false);
+  } finally {
+    setShowPopup(true);
+  }
+};
