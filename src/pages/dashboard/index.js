@@ -10,6 +10,7 @@ const NavigationBar = styled.nav`
   padding: 1rem;
   background-color: #f5f5f5;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
 `;
 
 const NavLink = styled(Button)`
@@ -26,6 +27,7 @@ const MainSection = styled.section`
   flex-wrap: wrap;
   justify-content: space-between;
   padding: 1rem;
+  border-radius: 10px;
 `;
 
 const DashboardCard = styled.div`
@@ -37,6 +39,7 @@ const DashboardCard = styled.div`
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   height: calc(70vh - 2rem);
   transition: transform 0.2s ease-in-out;
+  border-radius: 10px;
 
   &:hover {
     transform: scale(1.02);
@@ -51,6 +54,7 @@ const RecommendationCard = styled.div`
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   height: calc(70vh - 2rem);
+  border-radius: 10px;
 
 `;
 
@@ -67,6 +71,7 @@ const RecommendationItem = styled.div`
   background-color: #f9f9f9;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease-in-out;
+  border-radius: 10px;
 
   &:hover {
     transform: scale(1.015);

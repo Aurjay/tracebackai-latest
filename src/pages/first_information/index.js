@@ -4,13 +4,14 @@ import TextField from '@mui/material/TextField';
 import styled from 'styled-components';
 
 const FormCard = styled(Card)`
-  padding: 1rem;
-  margin: 1rem ;
+  padding: 2rem;
+  margin: 0rem auto;
   width: 80%;
   max-width: 600px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  border-radius: 10px; /* Add border radius for curved edges */
 `;
 
 const Question = styled.div`
@@ -19,6 +20,18 @@ const Question = styled.div`
 
 const AnswerField = styled(TextField)`
   width: 100%;
+`;
+
+const SubmitButton = styled.button`
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  color: #ffffff;
+  background-color: #ff0000;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 `;
 
 const FormComponent = () => {
@@ -31,6 +44,7 @@ const FormComponent = () => {
   const [postProcessing, setPostProcessing] = useState('');
   const [deployment, setDeployment] = useState('');
   const [concernedPart, setConcernedPart] = useState('');
+  const [submissionSuccess, setSubmissionSuccess] = useState(false);
 
   // Function to update the Google Cloud Text document
   const updateTextDocument = () => {
@@ -38,6 +52,9 @@ const FormComponent = () => {
     // This could involve making an API call or using a cloud storage library
     // to write the updated answers to the text document
     // Ensure proper authentication and authorization is in place
+
+    // Simulating successful submission
+    setSubmissionSuccess(true);
   };
 
   // Event handler for form submission
@@ -50,8 +67,7 @@ const FormComponent = () => {
 
   return (
     <FormCard>
-        <h2>Fill the form in your own words.
-        </h2>
+      <h2 style={{ textAlign: 'center' }}>Fill the form in your own words.</h2>
       <form onSubmit={handleSubmit}>
         <Question>
           <label htmlFor="name">Name:</label>
@@ -134,8 +150,14 @@ const FormComponent = () => {
           />
         </Question>
 
-        <button type="submit">Submit</button>
+        <SubmitButton type="submit">Submit</SubmitButton>
       </form>
+
+      {submissionSuccess && (
+        <div style={{ marginTop: '2rem', textAlign: 'center' }}>
+          Submission successful!
+        </div>
+      )}
     </FormCard>
   );
 };
