@@ -35,7 +35,7 @@ const DashboardCard = styled.div`
   margin-bottom: 1rem;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  height: calc(50vh - 2rem);
+  height: calc(70vh - 2rem);
   transition: transform 0.2s ease-in-out;
 
   &:hover {
@@ -50,15 +50,15 @@ const RecommendationCard = styled.div`
   margin-bottom: 1rem;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  height: calc(50vh - 2rem);
-  
+  height: calc(70vh - 2rem);
+
 `;
 
 const FirstInfoButton = styled(Button)`
   background-color: #d61e1e !important;
   color: #fff !important;
   font-size: 1.1rem;
-  
+
 `;
 
 const RecommendationItem = styled.div`
