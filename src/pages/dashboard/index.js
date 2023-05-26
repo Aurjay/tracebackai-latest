@@ -1,9 +1,11 @@
+import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import styled from 'styled-components';
-import React from 'react';
-import { Analytics } from '@vercel/analytics/react';
+
+import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import NoSsr from '@mui/material/NoSsr';
 
+import FormComponent from '../../components/FIR_Form_Component'; // Import the FormComponent
 
 const NavigationBar = styled.nav`
   display: flex;
@@ -57,14 +59,12 @@ const RecommendationCard = styled.div`
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   height: calc(70vh - 2rem);
   border-radius: 10px;
-
 `;
 
 const FirstInfoButton = styled(Button)`
   background-color: #d61e1e !important;
   color: #fff !important;
   font-size: 1.1rem;
-
 `;
 
 const RecommendationItem = styled.div`
@@ -81,23 +81,33 @@ const RecommendationItem = styled.div`
 `;
 
 const Dashboard = () => {
+  const [isFIRDialogOpen, setFIRDialogOpen] = useState(false);
+
+  const handleFIRDialogOpen = () => {
+    setFIRDialogOpen(true);
+  };
+
+  const handleFIRDialogClose = () => {
+    setFIRDialogOpen(false);
+  };
+
   return (
     <NoSsr>
     <>
       <NavigationBar>
-        <NavLink variant="text" onClick={() => window.location.href = "../act_viewer_hardcoded"}>
+        <NavLink variant="text" onClick={() => (window.location.href = '../act_viewer_hardcoded')}>
           Eu-ai-act-viewer
         </NavLink>
-        <NavLink variant="text" onClick={() => window.location.href = "../chat_box_page"}>
+        <NavLink variant="text" onClick={() => (window.location.href = '../chat_box_page')}>
           AI-act gpt
         </NavLink>
-        <NavLink variant="text" onClick={() => window.location.href = "../flow_chart"}>
+        <NavLink variant="text" onClick={() => (window.location.href = '../flow_chart')}>
           Flow Chart
         </NavLink>
-        <NavLink variant="text" onClick={() => window.location.href = "../check_list"}>
+        <NavLink variant="text" onClick={() => (window.location.href = '../check_list')}>
           Checklist
         </NavLink>
-        <NavLink variant="text" onClick={() => window.location.href = "../first_information"}>
+        <NavLink variant="text" onClick={handleFIRDialogOpen}>
           <FirstInfoButton variant="contained">F.I.R</FirstInfoButton>
         </NavLink>
       </NavigationBar>
@@ -135,6 +145,18 @@ const Dashboard = () => {
           </div>
         </RecommendationCard>
       </MainSection>
+
+      <Dialog open={isFIRDialogOpen} onClose={handleFIRDialogClose}>
+        <DialogTitle>F.I.R Form</DialogTitle>
+        <DialogContent>
+          <FormComponent/>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleFIRDialogClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
     </NoSsr>
   );
