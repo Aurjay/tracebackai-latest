@@ -73,7 +73,7 @@ const FormComponent = () => {
         if (response.ok) {
           setFileContent(data.data);
         } else {
-          console.error('An error occurred while fetching FIR-GPT.txt:', data.error);
+          console.error('An error occurredd while fetching FIR-GPT.txt:', data.error);
         }
       } catch (error) {
         console.error('An error occurred while fetching FIR-GPT.txt:', error);
