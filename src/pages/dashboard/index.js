@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import styled from 'styled-components';
-
+import MenuIcon from '@mui/icons-material/Menu';
 import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import NoSsr from '@mui/material/NoSsr';
 
 import FormComponent from '../../components/FIR_Form_Component'; // Import the FormComponent
 import Recommendations from '../../components/reccomendations_frontend'; // Import the Recommendations component
-
 
 const NavigationBar = styled.nav`
   display: flex;
@@ -17,10 +16,62 @@ const NavigationBar = styled.nav`
   background-color: #f5f5f5;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
+
+  @media (max-width: 600px) {
+    justify-content: space-between;
+  }
+`;
+
+const NavLinkContainer = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 const NavLink = styled(Button)`
   margin-right: 1rem;
+  transition: background-color 0.2s ease-in-out;
+
+  &:hover {
+    background-color: #e0e0e0;
+  }
+
+  @media (max-width: 600px) {
+    display: none;
+  }
+`;
+
+const DropdownMenu = styled.div`
+  position: relative;
+`;
+
+const MenuButton = styled(Button)`
+  display: none;
+
+  @media (max-width: 600px) {
+    display: block;
+  }
+`;
+
+const DropdownContent = styled.div`
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 0.5rem;
+
+  ${DropdownMenu}:hover & {
+    display: block;
+  }
+`;
+
+const DropdownNavLink = styled(Button)`
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  text-align: left;
   transition: background-color 0.2s ease-in-out;
 
   &:hover {
@@ -95,49 +146,70 @@ const Dashboard = () => {
 
   return (
     <NoSsr>
-    <>
-      <NavigationBar>
-        <NavLink variant="text" onClick={() => (window.location.href = '../act_viewer_hardcoded')}>
-          Eu-ai-act-viewer
-        </NavLink>
-        <NavLink variant="text" onClick={() => (window.location.href = '../chat_box_page')}>
-          AI-act gpt
-        </NavLink>
-        <NavLink variant="text" onClick={() => (window.location.href = '../flow_chart')}>
-          Flow Chart
-        </NavLink>
-        <NavLink variant="text" onClick={() => (window.location.href = '../check_list')}>
-          Checklist
-        </NavLink>
-        <NavLink variant="text" onClick={handleFIRDialogOpen}>
-          <FirstInfoButton variant="contained">F.I.R</FirstInfoButton>
-        </NavLink>
-      </NavigationBar>
+      <>
+        <NavigationBar>
+          <NavLinkContainer>
+            <NavLink variant="text" onClick={() => (window.location.href = '../act_viewer_hardcoded')}>
+              Eu-ai-act-viewer
+            </NavLink>
+            <NavLink variant="text" onClick={() => (window.location.href = '../chat_box_page')}>
+              AI-act gpt
+            </NavLink>
+            <NavLink variant="text" onClick={() => (window.location.href = '../flow_chart')}>
+              Flow Chart
+            </NavLink>
+            <NavLink variant="text" onClick={() => (window.location.href = '../check_list')}>
+              Checklist
+            </NavLink>
+          </NavLinkContainer>
+          <DropdownMenu>
+            <MenuButton>
+              <MenuIcon />
+            </MenuButton>
+            <DropdownContent>
+              <DropdownNavLink onClick={() => (window.location.href = '../act_viewer_hardcoded')}>
+                Eu-ai-act-viewer
+              </DropdownNavLink>
+              <DropdownNavLink onClick={() => (window.location.href = '../chat_box_page')}>
+                AI-act gpt
+              </DropdownNavLink>
+              <DropdownNavLink onClick={() => (window.location.href = '../flow_chart')}>
+                Flow Chart
+              </DropdownNavLink>
+              <DropdownNavLink onClick={() => (window.location.href = '../check_list')}>
+                Checklist
+              </DropdownNavLink>
+            </DropdownContent>
+          </DropdownMenu>
+          <NavLink variant="text" onClick={handleFIRDialogOpen}>
+            <FirstInfoButton variant="contained">F.I.R</FirstInfoButton>
+          </NavLink>
+        </NavigationBar>
 
-      <MainSection>
-        <DashboardCard>
-          <h2>Project Dashboard</h2>
-          <p>Graphs and statistics</p>
-        </DashboardCard>
+        <MainSection>
+          <DashboardCard>
+            <h2>Project Dashboard</h2>
+            <p>Graphs and statistics</p>
+          </DashboardCard>
 
-        <RecommendationCard>
-          <h2>Recommendations</h2>
-          <Recommendations/>
-        </RecommendationCard>
-      </MainSection>
+          <RecommendationCard>
+            <h2>Recommendations</h2>
+            <Recommendations />
+          </RecommendationCard>
+        </MainSection>
 
-      <Dialog open={isFIRDialogOpen} onClose={handleFIRDialogClose}>
-        <DialogTitle>F.I.R Form</DialogTitle>
-        <DialogContent>
-          <FormComponent/>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleFIRDialogClose} color="primary">
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </>
+        <Dialog open={isFIRDialogOpen} onClose={handleFIRDialogClose}>
+          <DialogTitle>F.I.R Form</DialogTitle>
+          <DialogContent>
+            <FormComponent />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleFIRDialogClose} color="primary">
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </>
     </NoSsr>
   );
 };
