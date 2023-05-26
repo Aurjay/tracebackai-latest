@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import Button from '@mui/material/Button';
-import styled from 'styled-components';
-import MenuIcon from '@mui/icons-material/Menu';
-import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
-import NoSsr from '@mui/material/NoSsr';
+import React, { useState } from 'react'
+import Button from '@mui/material/Button'
+import styled from 'styled-components'
+import MenuIcon from '@mui/icons-material/Menu'
+import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material'
+import NoSsr from '@mui/material/NoSsr'
 
-import FormComponent from '../../components/FIR_Form_Component'; // Import the FormComponent
-import Recommendations from '../../components/reccomendations_frontend'; // Import the Recommendations component
+import FormComponent from '../../components/FIR_Form_Component' // Import the FormComponent
+import Recommendations from '../../components/reccomendations_frontend' // Import the Recommendations component
 
 const NavigationBar = styled.nav`
   display: flex;
@@ -20,12 +20,12 @@ const NavigationBar = styled.nav`
   @media (max-width: 600px) {
     justify-content: space-between;
   }
-`;
+`
 
 const NavLinkContainer = styled.div`
   display: flex;
   align-items: center;
-`;
+`
 
 const NavLink = styled(Button)`
   margin-right: 1rem;
@@ -38,11 +38,11 @@ const NavLink = styled(Button)`
   @media (max-width: 600px) {
     display: none;
   }
-`;
+`
 
 const DropdownMenu = styled.div`
   position: relative;
-`;
+`
 
 const MenuButton = styled(Button)`
   display: none;
@@ -50,7 +50,7 @@ const MenuButton = styled(Button)`
   @media (max-width: 600px) {
     display: block;
   }
-`;
+`
 
 const DropdownContent = styled.div`
   display: none;
@@ -65,7 +65,7 @@ const DropdownContent = styled.div`
   ${DropdownMenu}:hover & {
     display: block;
   }
-`;
+`
 
 const DropdownNavLink = styled(Button)`
   display: block;
@@ -77,7 +77,7 @@ const DropdownNavLink = styled(Button)`
   &:hover {
     background-color: #e0e0e0;
   }
-`;
+`
 
 const MainSection = styled.section`
   display: flex;
@@ -85,7 +85,7 @@ const MainSection = styled.section`
   justify-content: space-between;
   padding: 1rem;
   border-radius: 10px;
-`;
+`
 
 const DashboardCard = styled.div`
   flex-basis: 25%;
@@ -101,7 +101,7 @@ const DashboardCard = styled.div`
   &:hover {
     transform: scale(1.02);
   }
-`;
+`
 
 const RecommendationCard = styled.div`
   flex-basis: calc(75% - 1rem);
@@ -112,13 +112,13 @@ const RecommendationCard = styled.div`
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   height: calc(70vh - 2rem);
   border-radius: 10px;
-`;
+`
 
 const FirstInfoButton = styled(Button)`
   background-color: #d61e1e !important;
   color: #fff !important;
   font-size: 1.1rem;
-`;
+`
 
 const RecommendationItem = styled.div`
   padding: 0.5rem;
@@ -131,34 +131,34 @@ const RecommendationItem = styled.div`
   &:hover {
     transform: scale(1.015);
   }
-`;
+`
 
 const Dashboard = () => {
-  const [isFIRDialogOpen, setFIRDialogOpen] = useState(false);
+  const [isFIRDialogOpen, setFIRDialogOpen] = useState(false)
 
   const handleFIRDialogOpen = () => {
-    setFIRDialogOpen(true);
-  };
+    setFIRDialogOpen(true)
+  }
 
   const handleFIRDialogClose = () => {
-    setFIRDialogOpen(false);
-  };
+    setFIRDialogOpen(false)
+  }
 
   return (
     <NoSsr>
       <>
         <NavigationBar>
           <NavLinkContainer>
-            <NavLink variant="text" onClick={() => (window.location.href = '../act_viewer_hardcoded')}>
+            <NavLink variant='text' onClick={() => (window.location.href = '../act_viewer_hardcoded')}>
               Eu-ai-act-viewer
             </NavLink>
-            <NavLink variant="text" onClick={() => (window.location.href = '../chat_box_page')}>
+            <NavLink variant='text' onClick={() => (window.location.href = '../chat_box_page')}>
               AI-act gpt
             </NavLink>
-            <NavLink variant="text" onClick={() => (window.location.href = '../flow_chart')}>
+            <NavLink variant='text' onClick={() => (window.location.href = '../flow_chart')}>
               Flow Chart
             </NavLink>
-            <NavLink variant="text" onClick={() => (window.location.href = '../check_list')}>
+            <NavLink variant='text' onClick={() => (window.location.href = '../check_list')}>
               Checklist
             </NavLink>
           </NavLinkContainer>
@@ -170,19 +170,14 @@ const Dashboard = () => {
               <DropdownNavLink onClick={() => (window.location.href = '../act_viewer_hardcoded')}>
                 Eu-ai-act-viewer
               </DropdownNavLink>
-              <DropdownNavLink onClick={() => (window.location.href = '../chat_box_page')}>
-                AI-act gpt
-              </DropdownNavLink>
-              <DropdownNavLink onClick={() => (window.location.href = '../flow_chart')}>
-                Flow Chart
-              </DropdownNavLink>
-              <DropdownNavLink onClick={() => (window.location.href = '../check_list')}>
-                Checklist
-              </DropdownNavLink>
+              <DropdownNavLink onClick={() => (window.location.href = '../chat_box_page')}>AI-act gpt</DropdownNavLink>
+              <DropdownNavLink onClick={() => (window.location.href = '../flow_chart')}>Flow Chart</DropdownNavLink>
+              <DropdownNavLink onClick={() => (window.location.href = '../check_list')}>Checklist</DropdownNavLink>
+              <DropdownNavLink onClick={handleFIRDialogOpen}>F.I.R</DropdownNavLink>
             </DropdownContent>
           </DropdownMenu>
-          <NavLink variant="text" onClick={handleFIRDialogOpen}>
-            <FirstInfoButton variant="contained">F.I.R</FirstInfoButton>
+          <NavLink variant='text' onClick={handleFIRDialogOpen}>
+            <FirstInfoButton variant='contained'>F.I.R</FirstInfoButton>
           </NavLink>
         </NavigationBar>
 
@@ -204,14 +199,14 @@ const Dashboard = () => {
             <FormComponent />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleFIRDialogClose} color="primary">
+            <Button onClick={handleFIRDialogClose} color='primary'>
               Close
             </Button>
           </DialogActions>
         </Dialog>
       </>
     </NoSsr>
-  );
-};
+  )
+}
 
-export default Dashboard;
+export default Dashboard
