@@ -6,6 +6,8 @@ import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material
 import NoSsr from '@mui/material/NoSsr';
 
 import FormComponent from '../../components/FIR_Form_Component'; // Import the FormComponent
+import Recommendations from '../../components/reccomendations_frontend'; // Import the Recommendations component
+
 
 const NavigationBar = styled.nav`
   display: flex;
@@ -120,29 +122,7 @@ const Dashboard = () => {
 
         <RecommendationCard>
           <h2>Recommendations</h2>
-          <div>
-            <RecommendationItem>
-              <h3>Recommendation 1</h3>
-              <p>Some details about Recommendation 1</p>
-            </RecommendationItem>
-
-            <RecommendationItem>
-              <h3>Recommendation 2</h3>
-              <p>Some details about Recommendation 2</p>
-            </RecommendationItem>
-
-            <RecommendationItem>
-              <h3>Recommendation 3</h3>
-              <p>Some details about Recommendation 3</p>
-            </RecommendationItem>
-
-            <RecommendationItem>
-              <h3>Recommendation 4</h3>
-              <p>Some details about Recommendation 4</p>
-            </RecommendationItem>
-
-            {/* Add more recommendation items as necessary */}
-          </div>
+          <Recommendations/>
         </RecommendationCard>
       </MainSection>
 

@@ -58,7 +58,6 @@ const FormComponent = () => {
     postProcessing: '',
     deployment: '',
     concernedPart: '',
-    answer: '', // Include the answer field in formValues state
   });
 
   const [showPopup, setShowPopup] = useState(false);
@@ -73,7 +72,7 @@ const FormComponent = () => {
         if (response.ok) {
           setFileContent(data.data);
         } else {
-          console.error('An error occurredd while fetching FIR-GPT.txt:', data.error);
+          console.error('An error occurred while fetching FIR-GPT.txt:', data.error);
         }
       } catch (error) {
         console.error('An error occurred while fetching FIR-GPT.txt:', error);
@@ -85,12 +84,12 @@ const FormComponent = () => {
 
   const updateTextDocument = async () => {
     try {
-      const response = await fetch('/api/updateFirData', {
+      const response = await fetch('/api/FIR_text_api', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json', // Change the content type to 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formValues), // Send the form values as JSON in the request body
+        body: JSON.stringify(formValues),
       });
 
       if (response.ok) {
@@ -183,11 +182,6 @@ const FormComponent = () => {
           <Question>
             <label htmlFor="concernedPart">Part of the pipeline that concerns you:</label>
             <AnswerField id="concernedPart" value={formValues.concernedPart} onChange={handleChange} />
-          </Question>
-
-          <Question>
-            <label htmlFor="answer">Answer:</label> {/* Add the answer field */}
-            <AnswerField id="answer" value={formValues.answer} onChange={handleChange} /> {/* Bind the value and onChange event */}
           </Question>
 
           <SubmitButton type="button" onClick={handleButtonClick}>
