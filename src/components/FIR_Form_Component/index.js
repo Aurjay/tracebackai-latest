@@ -3,6 +3,8 @@ import Card from '@mui/material/Card';
 import TextField from '@mui/material/TextField';
 import styled from 'styled-components';
 import NoSsr from '@mui/material/NoSsr';
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
 
 const FormCard = styled(Card)`
   padding: 2rem;
@@ -17,10 +19,17 @@ const FormCard = styled(Card)`
 
 const Question = styled.div`
   margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
 `;
 
 const AnswerField = styled(TextField)`
-  width: 100%;
+  flex: 1;
+`;
+
+const IconWrapper = styled.div`
+  margin-left: 1rem;
+  cursor: pointer;
 `;
 
 const SubmitButton = styled.button`
@@ -60,22 +69,37 @@ const FormComponent = () => {
     concernedPart: '',
   });
 
-  const [showPopup, setShowPopup] = useState(false);
-  const [isDataSent, setIsDataSent] = useState(false);
-  const [fileContent, setFileContent] = useState('');
+  const [editableFields, setEditableFields] = useState({
+    name: false,
+    usecase: false,
+    projectType: false,
+    dataGeneration: false,
+    dataPreprocessing: false,
+    training: false,
+    postProcessing: false,
+    deployment: false,
+    concernedPart: false,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch('/api/FIR_text_api');
-        const data = await response.json();
+        const data = await response.text();
+        console.log('Fetched data:', data); // Log the fetched data
         if (response.ok) {
-          setFileContent(data.data);
+          const formValuesData = {};
+          data.split('\n').forEach((line) => {
+            const [question, answer] = line.split(':');
+            formValuesData[question.trim()] = answer.trim();
+          });
+          console.log('Form values:', formValuesData); // Log the extracted form values
+          setFormValues(formValuesData);
         } else {
-          console.error('An error occurred while fetching FIR-GPT.txt:', data.error);
+          console.error('An error occurred while fetching form values:', data.error);
         }
       } catch (error) {
-        console.error('An error occurred while fetching FIR-GPT.txt:', error);
+        console.error('An error occurred while fetching form values:', error);
       }
     };
 
@@ -93,21 +117,34 @@ const FormComponent = () => {
       });
 
       if (response.ok) {
-        setIsDataSent(true);
+        // Data successfully sent
+        console.log('Data successfully sent.');
       } else {
-        setIsDataSent(false);
+        // Error sending data
+        console.error('Error sending data.');
       }
     } catch (error) {
       console.error('An error occurred while updating the text document:', error);
-      setIsDataSent(false);
-    } finally {
-      setShowPopup(true);
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     updateTextDocument();
+  };
+
+  const handleEditField = (fieldId) => {
+    setEditableFields({
+      ...editableFields,
+      [fieldId]: true,
+    });
+  };
+
+  const handleSaveField = (fieldId) => {
+    setEditableFields({
+      ...editableFields,
+      [fieldId]: false,
+    });
   };
 
   const handleChange = (e) => {
@@ -122,83 +159,40 @@ const FormComponent = () => {
     form.dispatchEvent(new Event('submit'));
   };
 
-  const closePopup = () => {
-    setShowPopup(false);
-  };
-
   return (
-    <NoSsr>
-      <FormCard>
-        <h2 style={{ textAlign: 'center' }}>Fill the form in your own words.</h2>
-        <form id="form" onSubmit={handleSubmit}>
-          <Question>
-            <label htmlFor="name">Project Name:</label>
-            <AnswerField id="name" value={formValues.name} onChange={handleChange} />
-          </Question>
+  <NoSsr>
+    <FormCard>
+      {/* Add a heading to indicate the source of the data */}
+      <h2 style={{ textAlign: 'center' }}>Data Fetched from Text File</h2>
 
-          <Question>
-            <label htmlFor="usecase">AI Usecase (Domain):</label>
-            <AnswerField id="usecase" value={formValues.usecase} onChange={handleChange} />
-          </Question>
-
-          <Question>
-            <label htmlFor="projectType">Type of the AI Project:</label>
-            <AnswerField id="projectType" value={formValues.projectType} onChange={handleChange} />
-          </Question>
-
-          <Question>
-            <label htmlFor="dataGeneration">Data Generation and Accumulation:</label>
+      {/* Add a separate form section for each question and answer */}
+      <form id="form" onSubmit={handleSubmit}>
+        {Object.entries(formValues).map(([fieldId, fieldValue]) => (
+          <Question key={fieldId}>
+            <label htmlFor={fieldId}>{fieldId}:</label>
             <AnswerField
-              id="dataGeneration"
-              value={formValues.dataGeneration}
+              id={fieldId}
+              value={fieldValue}
               onChange={handleChange}
+              disabled={!editableFields[fieldId]}
             />
+            <IconWrapper>
+              {editableFields[fieldId] ? (
+                <SaveIcon onClick={() => handleSaveField(fieldId)} />
+              ) : (
+                <EditIcon onClick={() => handleEditField(fieldId)} />
+              )}
+            </IconWrapper>
           </Question>
+        ))}
 
-          <Question>
-            <label htmlFor="dataPreprocessing">Data Preprocessing:</label>
-            <AnswerField
-              id="dataPreprocessing"
-              value={formValues.dataPreprocessing}
-              onChange={handleChange}
-            />
-          </Question>
+        <SubmitButton type="submit" onClick={handleButtonClick}>
+          Submit
+        </SubmitButton>
+      </form>
+    </FormCard>
+  </NoSsr>
+  )
+}
 
-          <Question>
-            <label htmlFor="training">Training:</label>
-            <AnswerField id="training" value={formValues.training} onChange={handleChange} />
-          </Question>
-
-          <Question>
-            <label htmlFor="postProcessing">Post Processing:</label>
-            <AnswerField id="postProcessing" value={formValues.postProcessing} onChange={handleChange} />
-          </Question>
-
-          <Question>
-            <label htmlFor="deployment">Deployment:</label>
-            <AnswerField id="deployment" value={formValues.deployment} onChange={handleChange} />
-          </Question>
-
-          <Question>
-            <label htmlFor="concernedPart">Part of the pipeline that concerns you:</label>
-            <AnswerField id="concernedPart" value={formValues.concernedPart} onChange={handleChange} />
-          </Question>
-
-          <SubmitButton type="button" onClick={handleButtonClick}>
-            Submit
-          </SubmitButton>
-        </form>
-
-        {showPopup && (
-          <Popup>
-            {isDataSent ? 'Data sent!' : 'Data not sent!'}
-            <br />
-            <button onClick={closePopup}>Close</button>
-          </Popup>
-        )}
-      </FormCard>
-    </NoSsr>
-  );
-};
-
-export default FormComponent;
+export default FormComponent
