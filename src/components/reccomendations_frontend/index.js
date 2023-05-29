@@ -82,13 +82,13 @@ function Recommendations() {
               />
             ))
           ) : (
-            <p>No recommendations for now. Update the F.I.R document.</p>
+            <p>No recommendations for now. Update the F.I.R document and click Refresh.</p>
           )}
         </div>
       )}
       <Snackbar
         open={saveSuccess}
-        autoHideDuration={3000}
+        autoHideDuration={2000}
         onClose={handleSnackbarClose}
         message="Recommendation saved successfully"
       />

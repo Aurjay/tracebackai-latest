@@ -7,6 +7,10 @@ import NoSsr from '@mui/material/NoSsr';
 
 import FormComponent from '../../components/FIR_Form_Component';
 import Recommendations from '../../components/reccomendations_frontend';
+import SavedRecommendations from '../../components/saved_reccomendation';
+
+import { Tab, Tabs, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
 
 const NavigationBar = styled.nav`
   display: flex;
@@ -19,6 +23,21 @@ const NavigationBar = styled.nav`
 
   @media (max-width: 600px) {
     justify-content: space-between;
+  }
+`;
+
+const WideDialog = styled(Dialog)`
+  .MuiDialog-paper {
+    width: 90%;
+    max-width: 900px;
+  }
+`;
+
+const WideDialogContent = styled(DialogContent)`
+  padding: 2rem;
+
+  @media (max-width: 600px) {
+    padding: 1rem;
   }
 `;
 
@@ -140,6 +159,8 @@ const RecommendationItem = styled.div`
 
 const Dashboard = () => {
   const [isFIRDialogOpen, setFIRDialogOpen] = useState(false);
+  const [tab, setTab] = useState('1');
+  const [showRecommendations, setShowRecommendations] = useState(true);
 
   const handleFIRDialogOpen = () => {
     setFIRDialogOpen(true);
@@ -149,21 +170,29 @@ const Dashboard = () => {
     setFIRDialogOpen(false);
   };
 
+  const handleTabChange = (_, newTab) => {
+    setTab(newTab);
+  };
+
+  const handleToggleRecommendations = () => {
+    setShowRecommendations(!showRecommendations);
+  };
+
   return (
     <NoSsr>
       <>
         <NavigationBar>
           <NavLinkContainer>
-            <NavLink variant="text" onClick={() => (window.location.href = '../act_viewer_hardcoded')}>
+            <NavLink variant='text' onClick={() => (window.location.href = '../act_viewer_hardcoded')}>
               Eu-ai-act-viewer
             </NavLink>
-            <NavLink variant="text" onClick={() => (window.location.href = '../chat_box_page')}>
+            <NavLink variant='text' onClick={() => (window.location.href = '../chat_box_page')}>
               AI-act gpt
             </NavLink>
-            <NavLink variant="text" onClick={() => (window.location.href = '../flow_chart')}>
+            <NavLink variant='text' onClick={() => (window.location.href = '../flow_chart')}>
               Flow Chart
             </NavLink>
-            <NavLink variant="text" onClick={() => (window.location.href = '../check_list')}>
+            <NavLink variant='text' onClick={() => (window.location.href = '../check_list')}>
               Checklist
             </NavLink>
           </NavLinkContainer>
@@ -181,8 +210,8 @@ const Dashboard = () => {
               <DropdownNavLink onClick={handleFIRDialogOpen}>F.I.R</DropdownNavLink>
             </DropdownContent>
           </DropdownMenu>
-          <NavLink variant="text" onClick={handleFIRDialogOpen}>
-            <FirstInfoButton variant="contained">F.I.R</FirstInfoButton>
+          <NavLink variant='text' onClick={handleFIRDialogOpen}>
+            <FirstInfoButton variant='contained'>F.I.R</FirstInfoButton>
           </NavLink>
         </NavigationBar>
 
@@ -193,22 +222,36 @@ const Dashboard = () => {
           </DashboardCard>
 
           <RecommendationCard>
-            <h2>Recommendations</h2>
-            <Recommendations />
+            <Tabs value={tab} onChange={handleTabChange}>
+              <Tab label='Recommendations' value='1' />
+              <Tab label='Saved Recommendations' value='2' />
+            </Tabs>
+            <Box sx={{ p: 3 }}>
+              {tab === '1' && (
+                <>
+                  <Recommendations />
+                </>
+              )}
+              {tab === '2' && (
+                <>
+                  <SavedRecommendations />
+                </>
+              )}
+            </Box>
           </RecommendationCard>
         </MainSection>
 
-        <Dialog open={isFIRDialogOpen} onClose={handleFIRDialogClose}>
+        <WideDialog open={isFIRDialogOpen} onClose={handleFIRDialogClose}>
           <DialogTitle>F.I.R Form</DialogTitle>
-          <DialogContent>
+          <WideDialogContent>
             <FormComponent />
-          </DialogContent>
+          </WideDialogContent>
           <DialogActions>
-            <Button onClick={handleFIRDialogClose} color="primary">
+            <Button onClick={handleFIRDialogClose} color='primary'>
               Close
             </Button>
           </DialogActions>
-        </Dialog>
+        </WideDialog>
       </>
     </NoSsr>
   );

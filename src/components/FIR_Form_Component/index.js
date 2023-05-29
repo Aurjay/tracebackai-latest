@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import NoSsr from '@mui/material/NoSsr';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
+import Snackbar from '@mui/material/Snackbar';
 
 const FormCard = styled(Card)`
   padding: 2rem;
@@ -14,7 +15,7 @@ const FormCard = styled(Card)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-radius: 10px; /* Add border radius for curved edges */
+  border-radius: 10px;
 `;
 
 const Question = styled.div`
@@ -25,6 +26,10 @@ const Question = styled.div`
 
 const AnswerField = styled(TextField)`
   flex: 1;
+  min-height: 100px;
+  textarea {
+    resize: vertical;
+  }
 `;
 
 const IconWrapper = styled.div`
@@ -46,8 +51,8 @@ const SubmitButton = styled.button`
 
 const Popup = styled.div`
   position: fixed;
-  top: 50%;
-  left: 50%;
+  top: 60%;
+  left: 60%;
   transform: translate(-50%, -50%);
   padding: 2rem;
   background-color: #ffffff;
@@ -81,19 +86,22 @@ const FormComponent = () => {
     concernedPart: false,
   });
 
+  const [isSnackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch('/api/FIR_text_api');
         const data = await response.text();
-        console.log('Fetched data:', data); // Log the fetched data
+        console.log('Fetched data:', data);
         if (response.ok) {
           const formValuesData = {};
           data.split('\n').forEach((line) => {
             const [question, answer] = line.split(':');
             formValuesData[question.trim()] = answer.trim();
           });
-          console.log('Form values:', formValuesData); // Log the extracted form values
+          console.log('Form values:', formValuesData);
           setFormValues(formValuesData);
         } else {
           console.error('An error occurred while fetching form values:', data.error);
@@ -117,14 +125,15 @@ const FormComponent = () => {
       });
 
       if (response.ok) {
-        // Data successfully sent
         console.log('Data successfully sent.');
+        handleSnackbarOpen('Data saved successfully');
       } else {
-        // Error sending data
         console.error('Error sending data.');
+        handleSnackbarOpen('Error saving data');
       }
     } catch (error) {
       console.error('An error occurred while updating the text document:', error);
+      handleSnackbarOpen('Error saving data');
     }
   };
 
@@ -159,40 +168,57 @@ const FormComponent = () => {
     form.dispatchEvent(new Event('submit'));
   };
 
+  const handleSnackbarOpen = (message) => {
+    setSnackbarOpen(true);
+    setSnackbarMessage(message);
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
   return (
-  <NoSsr>
-    <FormCard>
-      {/* Add a heading to indicate the source of the data */}
-      <h2 style={{ textAlign: 'center' }}>Data Fetched from Text File</h2>
+    <NoSsr>
+      <FormCard>
+        <h2 style={{ textAlign: 'center' }}>Data Fetched from Text File</h2>
+        <form id="form" onSubmit={handleSubmit}>
+          {Object.entries(formValues).map(([fieldId, fieldValue]) => (
+            <div key={fieldId}>
+              <Question>
+                <label htmlFor={fieldId}>{fieldId}:</label>
+              </Question>
+              <Question>
+                <AnswerField
+                  id={fieldId}
+                  value={fieldValue}
+                  onChange={handleChange}
+                  disabled={!editableFields[fieldId]}
+                  multiline
+                  rows={4}
+                />
+                <IconWrapper>
+                  {editableFields[fieldId] ? (
+                    <SaveIcon onClick={() => handleSaveField(fieldId)} />
+                  ) : (
+                    <EditIcon onClick={() => handleEditField(fieldId)} />
+                  )}
+                </IconWrapper>
+              </Question>
+            </div>
+          ))}
+          <SubmitButton type="submit" onClick={handleButtonClick}>
+            Submit
+          </SubmitButton>
+          <Snackbar
+            open={isSnackbarOpen}
+            autoHideDuration={3000}
+            onClose={handleSnackbarClose}
+            message={snackbarMessage}
+          />
+        </form>
+      </FormCard>
+    </NoSsr>
+  );
+};
 
-      {/* Add a separate form section for each question and answer */}
-      <form id="form" onSubmit={handleSubmit}>
-        {Object.entries(formValues).map(([fieldId, fieldValue]) => (
-          <Question key={fieldId}>
-            <label htmlFor={fieldId}>{fieldId}:</label>
-            <AnswerField
-              id={fieldId}
-              value={fieldValue}
-              onChange={handleChange}
-              disabled={!editableFields[fieldId]}
-            />
-            <IconWrapper>
-              {editableFields[fieldId] ? (
-                <SaveIcon onClick={() => handleSaveField(fieldId)} />
-              ) : (
-                <EditIcon onClick={() => handleEditField(fieldId)} />
-              )}
-            </IconWrapper>
-          </Question>
-        ))}
-
-        <SubmitButton type="submit" onClick={handleButtonClick}>
-          Submit
-        </SubmitButton>
-      </form>
-    </FormCard>
-  </NoSsr>
-  )
-}
-
-export default FormComponent
+export default FormComponent;
