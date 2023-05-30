@@ -6,6 +6,7 @@ import NoSsr from '@mui/material/NoSsr';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import Snackbar from '@mui/material/Snackbar';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const FormCard = styled(Card)`
   padding: 2rem;
@@ -49,16 +50,11 @@ const SubmitButton = styled.button`
   cursor: pointer;
 `;
 
-const Popup = styled.div`
-  position: fixed;
-  top: 60%;
-  left: 60%;
-  transform: translate(-50%, -50%);
-  padding: 2rem;
-  background-color: #ffffff;
-  border: 1px solid #000000;
-  border-radius: 4px;
-  z-index: 999;
+const LoadingWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100px;
 `;
 
 const FormComponent = () => {
@@ -88,59 +84,32 @@ const FormComponent = () => {
 
   const [isSnackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/api/FIR_text_api');
-        const data = await response.text();
-        console.log('Fetched data:', data);
+        const response = await fetch('/api/FIR-data-receive');
         if (response.ok) {
-          const formValuesData = {};
-          data.split('\n').forEach((line) => {
-            const [question, answer] = line.split(':');
-            formValuesData[question.trim()] = answer.trim();
-          });
-          console.log('Form values:', formValuesData);
-          setFormValues(formValuesData);
+          const data = await response.json();
+          setFormValues(data);
+          setEditableFields(Object.keys(data).reduce((obj, key) => {
+            obj[key] = false;
+            
+            return obj;
+          }, {}));
         } else {
-          console.error('An error occurred while fetching form values:', data.error);
+          console.error('Error fetching data:', response.status);
         }
       } catch (error) {
-        console.error('An error occurred while fetching form values:', error);
+        console.error('An error occurred while fetching data:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchData();
   }, []);
-
-  const updateTextDocument = async () => {
-    try {
-      const response = await fetch('/api/FIR_text_api', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formValues),
-      });
-
-      if (response.ok) {
-        console.log('Data successfully sent.');
-        handleSnackbarOpen('Data saved successfully');
-      } else {
-        console.error('Error sending data.');
-        handleSnackbarOpen('Error saving data');
-      }
-    } catch (error) {
-      console.error('An error occurred while updating the text document:', error);
-      handleSnackbarOpen('Error saving data');
-    }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    updateTextDocument();
-  };
 
   const handleEditField = (fieldId) => {
     setEditableFields({
@@ -163,6 +132,31 @@ const FormComponent = () => {
     });
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch('/api/FIR-data-sent', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formValues),
+      });
+
+      if (response.ok) {
+        console.log('Data successfully sent.');
+        handleSnackbarOpen('Data saved successfully');
+      } else {
+        console.error('Error sending data:', response.status);
+        handleSnackbarOpen('Error saving data');
+      }
+    } catch (error) {
+      console.error('An error occurred while sending data:', error);
+      handleSnackbarOpen('Error saving data');
+    }
+  };
+
   const handleButtonClick = () => {
     const form = document.getElementById('form');
     form.dispatchEvent(new Event('submit'));
@@ -177,46 +171,218 @@ const FormComponent = () => {
     setSnackbarOpen(false);
   };
 
+  if (isLoading) {
+    return (
+      <LoadingWrapper>
+        <CircularProgress />
+      </LoadingWrapper>
+    );
+  }
+
   return (
     <NoSsr>
       <FormCard>
         <h2 style={{ textAlign: 'center' }}>Data Fetched from Text File</h2>
         <form id="form" onSubmit={handleSubmit}>
-          {Object.entries(formValues).map(([fieldId, fieldValue]) => (
-            <div key={fieldId}>
-              <Question>
-                <label htmlFor={fieldId}>{fieldId}:</label>
-              </Question>
-              <Question>
-                <AnswerField
-                  id={fieldId}
-                  value={fieldValue}
-                  onChange={handleChange}
-                  disabled={!editableFields[fieldId]}
-                  multiline
-                  rows={4}
-                />
-                <IconWrapper>
-                  {editableFields[fieldId] ? (
-                    <SaveIcon onClick={() => handleSaveField(fieldId)} />
-                  ) : (
-                    <EditIcon onClick={() => handleEditField(fieldId)} />
-                  )}
-                </IconWrapper>
-              </Question>
-            </div>
-          ))}
-          <SubmitButton type="submit" onClick={handleButtonClick}>
-            Submit
-          </SubmitButton>
-          <Snackbar
-            open={isSnackbarOpen}
-            autoHideDuration={3000}
-            onClose={handleSnackbarClose}
-            message={snackbarMessage}
-          />
+          <Question>
+            <label htmlFor="name">Name:</label>
+          </Question>
+          <Question>
+            <AnswerField
+              id="name"
+              value={formValues.name}
+              onChange={handleChange}
+              disabled={!editableFields.name}
+              multiline
+              rows={4}
+            />
+            <IconWrapper>
+              {editableFields.name ? (
+                <SaveIcon onClick={() => handleSaveField('name')} />
+              ) : (
+                <EditIcon onClick={() => handleEditField('name')} />
+              )}
+            </IconWrapper>
+          </Question>
+
+          <Question>
+            <label htmlFor="usecase">Usecase:</label>
+          </Question>
+          <Question>
+            <AnswerField
+              id="usecase"
+              value={formValues.usecase}
+              onChange={handleChange}
+              disabled={!editableFields.usecase}
+              multiline
+              rows={4}
+            />
+            <IconWrapper>
+              {editableFields.usecase ? (
+                <SaveIcon onClick={() => handleSaveField('usecase')} />
+              ) : (
+                <EditIcon onClick={() => handleEditField('usecase')} />
+              )}
+            </IconWrapper>
+          </Question>
+
+          <Question>
+            <label htmlFor="projectType">Project Type:</label>
+          </Question>
+          <Question>
+            <AnswerField
+              id="projectType"
+              value={formValues.projectType}
+              onChange={handleChange}
+              disabled={!editableFields.projectType}
+              multiline
+              rows={4}
+            />
+            <IconWrapper>
+              {editableFields.projectType ? (
+                <SaveIcon onClick={() => handleSaveField('projectType')} />
+              ) : (
+                <EditIcon onClick={() => handleEditField('projectType')} />
+              )}
+            </IconWrapper>
+          </Question>
+
+          <Question>
+            <label htmlFor="dataGeneration">Data Generation:</label>
+          </Question>
+          <Question>
+            <AnswerField
+              id="dataGeneration"
+              value={formValues.dataGeneration}
+              onChange={handleChange}
+              disabled={!editableFields.dataGeneration}
+              multiline
+              rows={4}
+            />
+            <IconWrapper>
+              {editableFields.dataGeneration ? (
+                <SaveIcon onClick={() => handleSaveField('dataGeneration')} />
+              ) : (
+                <EditIcon onClick={() => handleEditField('dataGeneration')} />
+              )}
+            </IconWrapper>
+          </Question>
+
+          <Question>
+            <label htmlFor="dataPreprocessing">Data Preprocessing:</label>
+          </Question>
+          <Question>
+            <AnswerField
+              id="dataPreprocessing"
+              value={formValues.dataPreprocessing}
+              onChange={handleChange}
+              disabled={!editableFields.dataPreprocessing}
+              multiline
+              rows={4}
+            />
+            <IconWrapper>
+              {editableFields.dataPreprocessing ? (
+                <SaveIcon onClick={() => handleSaveField('dataPreprocessing')} />
+              ) : (
+                <EditIcon onClick={() => handleEditField('dataPreprocessing')} />
+              )}
+            </IconWrapper>
+          </Question>
+
+          <Question>
+            <label htmlFor="training">Training:</label>
+          </Question>
+          <Question>
+            <AnswerField
+              id="training"
+              value={formValues.training}
+              onChange={handleChange}
+              disabled={!editableFields.training}
+              multiline
+              rows={4}
+            />
+            <IconWrapper>
+              {editableFields.training ? (
+                <SaveIcon onClick={() => handleSaveField('training')} />
+              ) : (
+                <EditIcon onClick={() => handleEditField('training')} />
+              )}
+            </IconWrapper>
+          </Question>
+
+          <Question>
+            <label htmlFor="postProcessing">Post Processing:</label>
+          </Question>
+          <Question>
+            <AnswerField
+              id="postProcessing"
+              value={formValues.postProcessing}
+              onChange={handleChange}
+              disabled={!editableFields.postProcessing}
+              multiline
+              rows={4}
+            />
+            <IconWrapper>
+              {editableFields.postProcessing ? (
+                <SaveIcon onClick={() => handleSaveField('postProcessing')} />
+              ) : (
+                <EditIcon onClick={() => handleEditField('postProcessing')} />
+              )}
+            </IconWrapper>
+          </Question>
+
+          <Question>
+            <label htmlFor="deployment">Deployment:</label>
+          </Question>
+          <Question>
+            <AnswerField
+              id="deployment"
+              value={formValues.deployment}
+              onChange={handleChange}
+              disabled={!editableFields.deployment}
+              multiline
+              rows={4}
+            />
+            <IconWrapper>
+              {editableFields.deployment ? (
+                <SaveIcon onClick={() => handleSaveField('deployment')} />
+              ) : (
+                <EditIcon onClick={() => handleEditField('deployment')} />
+              )}
+            </IconWrapper>
+          </Question>
+
+          <Question>
+            <label htmlFor="concernedPart">Concerned Part:</label>
+          </Question>
+          <Question>
+            <AnswerField
+              id="concernedPart"
+              value={formValues.concernedPart}
+              onChange={handleChange}
+              disabled={!editableFields.concernedPart}
+              multiline
+              rows={4}
+            />
+            <IconWrapper>
+              {editableFields.concernedPart ? (
+                <SaveIcon onClick={() => handleSaveField('concernedPart')} />
+              ) : (
+                <EditIcon onClick={() => handleEditField('concernedPart')} />
+              )}
+            </IconWrapper>
+          </Question>
+
+          <SubmitButton onClick={handleButtonClick}>Submit</SubmitButton>
         </form>
       </FormCard>
+
+      <Snackbar
+        open={isSnackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+        message={snackbarMessage}
+      />
     </NoSsr>
   );
 };
