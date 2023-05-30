@@ -53,11 +53,25 @@ function Recommendations() {
     fetchRecommendations();
   };
 
-  const handleSaveRecommendation = (recommendation) => {
-    // Code for saving recommendation to Google Cloud Storage
+  const handleSaveRecommendation = async (recommendation) => {
+    try {
+      const response = await fetch('/api/Recc-data-sent', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ recommendation }),
+      });
 
-    // Show success message
-    setSaveSuccess(true);
+      if (response.ok) {
+        // Show success message
+        setSaveSuccess(true);
+      } else {
+        console.error('Failed to save recommendation');
+      }
+    } catch (error) {
+      console.error('Error saving recommendation:', error);
+    }
   };
 
   const handleSnackbarClose = () => {
@@ -72,7 +86,7 @@ function Recommendations() {
       {loading ? (
         <CircularProgress className="loading-icon" />
       ) : (
-        <div className="recommendations">
+        <div className="recommendations" style={{ maxHeight: '300px', overflowY: 'auto' }}>
           {recommendations.length > 0 ? (
             recommendations.map((recommendation, index) => (
               <RecommendationCard

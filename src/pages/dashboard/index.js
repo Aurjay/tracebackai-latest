@@ -113,7 +113,7 @@ const DashboardCard = styled.div`
   margin-bottom: 1rem;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  height: calc(70vh - 2rem);
+  height: calc(80vh - 1rem);
   transition: transform 0.2s ease-in-out;
   border-radius: 10px;
 
@@ -129,7 +129,7 @@ const RecommendationCard = styled.div`
   margin-bottom: 1rem;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  height: calc(70vh - 2rem);
+  height: calc(80vh - 1rem);
   transition: transform 0.5s ease-in-out;
   border-radius: 10px;
 
