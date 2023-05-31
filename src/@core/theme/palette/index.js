@@ -1,71 +1,71 @@
 const DefaultPalette = (mode, themeColor) => {
   // ** Vars
-  const lightColor = '58, 53, 65'
-  const darkColor = '197, 187, 252'
-  const mainColor = mode === 'light' ? lightColor : darkColor
+  const lightColor = '58, 53, 65';
+  const darkColor = '197, 187, 252';
+  const mainColor = mode === 'light' ? lightColor : darkColor;
 
   const primaryGradient = () => {
     if (themeColor === 'primary') {
-      return '#2a09e3'
+      return `linear-gradient(to bottom, rgba(${mainColor}, 1), #FFF)`;
     } else if (themeColor === 'secondary') {
-      return '#9C9FA4'
+      return '#9C9FA4';
     } else if (themeColor === 'success') {
-      return '#93DD5C'
+      return '#93DD5C';
     } else if (themeColor === 'error') {
-      return '#FF8C90'
+      return '#FF8C90';
     } else if (themeColor === 'warning') {
-      return '#FFCF5C'
+      return '#FFCF5C';
     } else {
-      return '#2a93f5'
+      return '#2a93f5';
     }
-  }
+  };
 
   return {
     customColors: {
       main: mainColor,
       primaryGradient: primaryGradient(),
-      tableHeaderBg: mode === 'light' ? '#F9FAFC' : '#3D3759'
+      tableHeaderBg: mode === 'light' ? '#F9FAFC' : '#3D3759',
     },
     common: {
       black: '#000',
-      white: '#FFF'
+      white: '#FFF',
     },
     mode: mode,
     primary: {
-      light: '#2a09e3',
-      main: '#2a09e3',
-      dark: '#2a09e3',
-      contrastText: '#FFF'
+      light: '#b279fc',
+      main: '#b279fc',
+      dark: '#b279fc',
+      contrastText: '#FFF',
     },
     secondary: {
       light: '#9C9FA4',
       main: '#8A8D93',
       dark: '#777B82',
-      contrastText: '#FFF'
+      contrastText: '#FFF',
     },
     success: {
       light: '#6AD01F',
       main: '#56CA00',
       dark: '#4CB200',
-      contrastText: '#FFF'
+      contrastText: '#FFF',
     },
     error: {
       light: '#FF6166',
       main: '#FF4C51',
       dark: '#E04347',
-      contrastText: '#FFF'
+      contrastText: '#FFF',
     },
     warning: {
       light: '#FFCA64',
       main: '#FFB400',
       dark: '#E09E00',
-      contrastText: '#FFF'
+      contrastText: '#FFF',
     },
     info: {
       light: '#32BAFF',
       main: '#16B1FF',
       dark: '#139CE0',
-      contrastText: '#FFF'
+      contrastText: '#FFF',
     },
     grey: {
       50: '#FAFAFA',
@@ -81,17 +81,17 @@ const DefaultPalette = (mode, themeColor) => {
       A100: '#D5D5D5',
       A200: '#AAAAAA',
       A400: '#616161',
-      A700: '#303030'
+      A700: '#303030',
     },
     text: {
       primary: `rgba(${mainColor}, 0.87)`,
       secondary: `rgba(${mainColor}, 0.68)`,
-      disabled: `rgba(${mainColor}, 0.38)`
+      disabled: `rgba(${mainColor}, 0.38)`,
     },
     divider: `rgba(${mainColor}, 0.12)`,
     background: {
       paper: mode === 'light' ? '#FFF' : '#210707',
-      default: mode === 'light' ? '#F4F5FA' : '#210707'
+      default: mode === 'light' ? '#F4F5FA' : '#210707',
     },
     action: {
       active: `rgba(${mainColor}, 0.54)`,
@@ -99,9 +99,9 @@ const DefaultPalette = (mode, themeColor) => {
       selected: `rgba(${mainColor}, 0.08)`,
       disabled: `rgba(${mainColor}, 0.3)`,
       disabledBackground: `rgba(${mainColor}, 0.18)`,
-      focus: `rgba(${mainColor}, 0.12)`
-    }
-  }
-}
+      focus: `rgba(${mainColor}, 0.12)`,
+    },
+  };
+};
 
-export default DefaultPalette
+export default DefaultPalette;

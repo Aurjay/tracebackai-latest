@@ -17,7 +17,7 @@ const NavigationBar = styled.nav`
   justify-content: flex-start;
   align-items: center;
   padding: 1rem;
-  background-color: #f5f5f5;
+  background-color: #ffffff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
 
@@ -51,7 +51,7 @@ const NavLink = styled(Button)`
   transition: background-color 0.2s ease-in-out;
 
   &:hover {
-    background-color: #e0e0e0;
+    background-color: #ffffff;
   }
 
   @media (max-width: 600px) {
@@ -139,8 +139,8 @@ const RecommendationCard = styled.div`
 `;
 
 const FirstInfoButton = styled(Button)`
-  background-color: #d61e1e !important;
-  color: #fff !important;
+  background-color: #f89ef5 !important;
+  color: #ad63f3 !important;
   font-size: 1.1rem;
 `;
 
