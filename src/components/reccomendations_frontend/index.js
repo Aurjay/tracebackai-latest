@@ -50,6 +50,7 @@ function Recommendations() {
   };
 
   const handleRefresh = () => {
+    setRecommendations([]); // Clear existing recommendations
     fetchRecommendations();
   };
 
