@@ -210,13 +210,13 @@ const Dashboard = () => {
               <DropdownNavLink onClick={handleFIRDialogOpen}>F.I.R</DropdownNavLink>
             </DropdownContent>
           </DropdownMenu>
-          <NavLink variant='text' onClick={handleFIRDialogOpen}>
-            <FirstInfoButton variant='contained'>F.I.R</FirstInfoButton>
+          <NavLink variant='text'  onClick={handleFIRDialogOpen}>
+            <FirstInfoButton variant='contained' color="primary">F.I.R</FirstInfoButton>
           </NavLink>
         </NavigationBar>
 
         <MainSection>
-          <DashboardCard>
+          <DashboardCard >
             <h2>Project Dashboard</h2>
             <p>Graphs and statistics</p>
           </DashboardCard>
