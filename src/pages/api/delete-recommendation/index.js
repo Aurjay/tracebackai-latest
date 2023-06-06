@@ -7,7 +7,7 @@ const serviceAccountKeyPath = path.join(process.cwd(), 'traceback-ai-FIR.json');
 
 export default async function handler(req, res) {
   try {
-    const { recommendation } = req.body;
+    const { recommendations } = req.body;
 
     // Create a new instance of the Google Cloud Storage client with the service account key file
     const storage = new Storage({ keyFilename: serviceAccountKeyPath });
@@ -24,22 +24,18 @@ export default async function handler(req, res) {
     // Parse the JSON data
     const jsonData = JSON.parse(fileContents.toString());
 
-    // Append the new recommendation to the existing recommendations array
-    if (Array.isArray(jsonData.recommendations)) {
-      jsonData.recommendations.push(recommendation);
-    } else {
-      jsonData.recommendations = [recommendation];
-    }
+    // Filter out deleted recommendations and update the contents of the file with the modified data
+    jsonData.recommendations = recommendations.filter((rec) => rec !== null);
 
     // Update the contents of the file with the modified data
     await file.save(JSON.stringify(jsonData, null, 2), {
       contentType: 'application/json',
     });
 
-    console.log('Recommendation saved successfully.');
-    res.status(200).json({ message: 'Recommendation saved successfully' });
+    console.log('Recommendations saved successfully.');
+    res.status(200).json({ message: 'Recommendations saved successfully' });
   } catch (error) {
-    console.log('An error occurred while saving the recommendation:', error);
-    res.status(500).json({ message: 'An error occurred while saving the recommendation' });
+    console.log('An error occurred while saving recommendations:', error);
+    res.status(500).json({ message: 'An error occurred while saving recommendations' });
   }
 }

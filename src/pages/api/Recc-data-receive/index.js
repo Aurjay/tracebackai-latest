@@ -7,8 +7,6 @@ const serviceAccountKeyPath = path.join(process.cwd(), 'traceback-ai-FIR.json');
 
 export default async function handler(req, res) {
   try {
-    const { recommendation } = req.body;
-
     // Create a new instance of the Google Cloud Storage client with the service account key file
     const storage = new Storage({ keyFilename: serviceAccountKeyPath });
 
@@ -18,33 +16,19 @@ export default async function handler(req, res) {
     // Get a reference to the file
     const file = bucket.file(storageFileName);
 
-    // Read the existing recommendations JSON data from the file
-    let existingData = { recommendations: [] }; // Initialize with an empty array if the file doesn't exist yet
-    try {
-      const [data] = await file.download();
-      if (data) {
-        existingData = JSON.parse(data.toString());
-      }
-      console.log('Existing Recommendations:', existingData.recommendations);
-    } catch (error) {
-      console.log('Error reading existing data:', error);
-    }
+    // Download the file contents
+    const [fileContent] = await file.download();
 
-    // Append the new recommendation to the existing recommendations array
-    existingData.recommendations.push(recommendation);
+    // Parse the JSON content
+    const existingData = JSON.parse(fileContent.toString());
 
-    // Log the final JSON data before updating the file
-    console.log('Final JSON:', JSON.stringify(existingData, null, 2));
+    // Log the existing data
+    console.log('Received data:', existingData);
 
-    // Update the contents of the file with the new JSON data
-    await file.save(JSON.stringify(existingData, null, 2), {
-      contentType: 'application/json',
-    });
-
-    console.log('Recommendation saved successfully.');
-    res.status(200).json({ message: 'Recommendation saved successfully' });
+    // Return the existing data as the response
+    res.status(200).json(existingData);
   } catch (error) {
-    console.log('An error occurred while saving the recommendation:', error);
-    res.status(500).json({ message: 'An error occurred while saving the recommendation' });
+    console.log('An error occurred while fetching the data:', error);
+    res.status(500).json({ message: 'An error occurred while fetching data' });
   }
 }
