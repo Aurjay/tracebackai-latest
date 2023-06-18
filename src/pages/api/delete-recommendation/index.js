@@ -1,41 +1,55 @@
-import { Storage } from '@google-cloud/storage';
+import admin from 'firebase-admin';
 import path from 'path';
 
-const storageBucketName = 'test-json-latest'; // Update with the correct storage bucket name
-const storageFileName = 'saved-recommendations.json'; // Update with the correct JSON file name
-const serviceAccountKeyPath = path.join(process.cwd(), 'traceback-ai-FIR.json'); // Update with the path to your service account key file
+const firebaseDatabaseURL = 'https://traceback-ai-43af3-default-rtdb.europe-west1.firebasedatabase.app/'; // Replace with your Firebase Realtime Database URL
+
+// Update with the path to your service account key file
+const serviceAccountKeyPath = path.join(process.cwd(), 'traceback-ai-rtd.json');
+
+// Initialize the Firebase Admin SDK
+if (admin.apps.length === 0) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccountKeyPath),
+    databaseURL: firebaseDatabaseURL,
+  });
+}
 
 export default async function handler(req, res) {
   try {
-    const { recommendations } = req.body;
+    // Get a reference to the Firebase Realtime Database
+    const database = admin.database();
 
-    // Create a new instance of the Google Cloud Storage client with the service account key file
-    const storage = new Storage({ keyFilename: serviceAccountKeyPath });
+    // Get the deleted recommendations from the request body
+    const { deletedRecommendations } = req.body;
 
-    // Get a reference to the bucket
-    const bucket = storage.bucket(storageBucketName);
+    // Get a reference to the "recommendations" node in the database
+    const recommendationsRef = database.ref('recommendations');
 
-    // Get a reference to the file
-    const file = bucket.file(storageFileName);
+    // Fetch all recommendations
+    const snapshot = await recommendationsRef.once('value');
+    const recommendations = snapshot.val();
 
-    // Read the contents of the file
-    const [fileContents] = await file.download();
+    if (recommendations) {
+      // Find and delete the recommendations with the specified document names
+      const deletedDocNames = [];
+      const deletePromises = [];
+      deletedRecommendations.forEach((docName) => {
+        Object.entries(recommendations).forEach(([key, value]) => {
+          if (value.docName === docName) {
+            deletePromises.push(recommendationsRef.child(key).remove());
+            deletedDocNames.push(docName);
+          }
+        });
+      });
 
-    // Parse the JSON data
-    const jsonData = JSON.parse(fileContents.toString());
+      await Promise.all(deletePromises);
 
-    // Filter out deleted recommendations and update the contents of the file with the modified data
-    jsonData.recommendations = recommendations.filter((rec) => rec !== null);
-
-    // Update the contents of the file with the modified data
-    await file.save(JSON.stringify(jsonData, null, 2), {
-      contentType: 'application/json',
-    });
-
-    console.log('Recommendations saved successfully.');
-    res.status(200).json({ message: 'Recommendations saved successfully' });
+      res.status(200).json({ message: 'Recommendations deleted successfully', deletedDocNames });
+    } else {
+      res.status(404).json({ message: 'No recommendations found' });
+    }
   } catch (error) {
-    console.log('An error occurred while saving recommendations:', error);
-    res.status(500).json({ message: 'An error occurred while saving recommendations' });
+    console.log('An error occurred while deleting the recommendations:', error);
+    res.status(500).json({ message: 'An error occurred while deleting the recommendations' });
   }
 }

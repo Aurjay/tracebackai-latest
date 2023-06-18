@@ -8,6 +8,7 @@ import NoSsr from '@mui/material/NoSsr';
 import FormComponent from '../../components/FIR_Form_Component';
 import Recommendations from '../../components/reccomendations_frontend';
 import SavedRecommendations from '../../components/saved_reccomendation';
+import Code_Summary from '../../components/code_summary'
 
 import { Tab, Tabs, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -225,6 +226,9 @@ const Dashboard = () => {
             <Tabs value={tab} onChange={handleTabChange}>
               <Tab label='Recommendations' value='1' />
               <Tab label='Saved Recommendations' value='2' />
+              <Tab label='Code Summary' value='3' />
+
+
             </Tabs>
             <Box sx={{ p: 3 }}>
               {tab === '1' && (
@@ -237,6 +241,12 @@ const Dashboard = () => {
                   <SavedRecommendations />
                 </>
               )}
+              {tab === '3' && (
+                <>
+                  <Code_Summary />
+                </>
+              )}
+
             </Box>
           </RecommendationCard>
         </MainSection>

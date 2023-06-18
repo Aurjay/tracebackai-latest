@@ -31,6 +31,7 @@ const SavedRecommendations = () => {
   const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showSaveButton, setShowSaveButton] = useState(false);
+  const [deletedRecommendationNames, setDeletedRecommendationNames] = useState([]);
 
   useEffect(() => {
     fetchRecommendations();
@@ -42,9 +43,15 @@ const SavedRecommendations = () => {
       const response = await fetch('/api/Recc-data-receive'); // Replace with the actual API endpoint
       const data = await response.json();
       console.log('Fetched recommendations:', data); // Debugging statement
-      if (Array.isArray(data.recommendations)) {
-        const filteredRecommendations = data.recommendations.filter((rec) => rec !== null);
-        setRecommendations(filteredRecommendations);
+
+      // Extract the recommendations from the received JSON data
+      const recommendations = Object.entries(data).map(([docName, item]) => ({
+        docName,
+        data: item.data,
+      }));
+
+      if (recommendations.length > 0) {
+        setRecommendations(recommendations);
         setShowSaveButton(false); // Reset save button visibility
       } else {
         setRecommendations([]);
@@ -61,13 +68,17 @@ const SavedRecommendations = () => {
     fetchRecommendations();
   };
 
-  const handleDelete = async (index) => {
+  const handleDelete = async (docName) => {
     try {
       setLoading(true);
 
-      // Assuming you have an API endpoint to delete the recommendation by index
-      await fetch(`/api/delete-recommendation/${index}`, { method: 'DELETE' });
-      const updatedRecommendations = recommendations.filter((_, i) => i !== index);
+      // Assuming you have an API endpoint to delete the recommendation by document name
+      await fetch(`/api/delete-recommendation/${docName}`, { method: 'DELETE' });
+
+      // Update the deleted recommendation names
+      setDeletedRecommendationNames([...deletedRecommendationNames, docName]);
+
+      const updatedRecommendations = recommendations.filter((rec) => rec.docName !== docName);
       setRecommendations(updatedRecommendations);
       setShowSaveButton(true); // Show save button after deleting a recommendation
     } catch (error) {
@@ -82,7 +93,9 @@ const SavedRecommendations = () => {
       setLoading(true);
 
       // Get the non-deleted recommendations
-      const nonDeletedRecommendations = recommendations.filter((rec) => rec !== null);
+      const nonDeletedRecommendations = recommendations.filter(
+        (rec) => !deletedRecommendationNames.includes(rec.docName)
+      );
 
       // Log the data being sent to the API endpoint
       console.log('Data to be sent:', nonDeletedRecommendations);
@@ -121,14 +134,14 @@ const SavedRecommendations = () => {
       ) : (
         <>
           {recommendations.length > 0 ? (
-            recommendations.map((recommendation, index) => (
-              <RecommendationItem key={index}>
-                <pre style={{ whiteSpace: 'pre-wrap' }}>{recommendation}</pre>
+            recommendations.map((recommendation) => (
+              <RecommendationItem key={recommendation.docName}>
+                <pre style={{ whiteSpace: 'pre-wrap' }}>{recommendation.data}</pre>
                 <Button
                   variant="contained"
                   color="secondary"
                   startIcon={<DeleteIcon />}
-                  onClick={() => handleDelete(index)}
+                  onClick={() => handleDelete(recommendation.docName)}
                 >
                   Delete
                 </Button>

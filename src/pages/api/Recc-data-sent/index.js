@@ -1,39 +1,37 @@
-import { Storage } from '@google-cloud/storage';
+import admin from 'firebase-admin';
 import path from 'path';
 
-const storageBucketName = 'test-json-latest'; // Update with the correct storage bucket name
-const storageFileName = 'saved-recommendations.json'; // Update with the correct JSON file name
-const serviceAccountKeyPath = path.join(process.cwd(), 'traceback-ai-FIR.json'); // Update with the path to your service account key file
+const firebaseDatabaseURL = 'https://traceback-ai-43af3-default-rtdb.europe-west1.firebasedatabase.app/'; // Replace with your Firebase Realtime Database URL
+
+// Update with the path to your service account key file
+const serviceAccountKeyPath = path.join(process.cwd(), 'traceback-ai-rtd.json');
+
+// Initialize the Firebase Admin SDK
+
+
+if (admin.apps.length === 0) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccountKeyPath),
+    databaseURL: firebaseDatabaseURL,
+
+  });
+}
 
 export default async function handler(req, res) {
   try {
     const { recommendation } = req.body;
 
-    // Create a new instance of the Google Cloud Storage client with the service account key file
-    const storage = new Storage({ keyFilename: serviceAccountKeyPath });
+    // Get a reference to the Firebase Realtime Database
+    const database = admin.database();
 
-    // Get a reference to the bucket
-    const bucket = storage.bucket(storageBucketName);
+    // Get a reference to the "recommendations" node in the database
+    const recommendationsRef = database.ref('recommendations');
 
-    // Get a reference to the file
-    const file = bucket.file(storageFileName);
-
-    // Read the contents of the file
-    const [fileContents] = await file.download();
-
-    // Parse the JSON data
-    const jsonData = JSON.parse(fileContents.toString());
-
-    // Append the new recommendation to the existing recommendations array
-    if (Array.isArray(jsonData.recommendations)) {
-      jsonData.recommendations.push(recommendation);
-    } else {
-      jsonData.recommendations = [recommendation];
-    }
-
-    // Update the contents of the file with the modified data
-    await file.save(JSON.stringify(jsonData, null, 2), {
-      contentType: 'application/json',
+    // Push the new recommendation data under a new child node
+    const newRecommendationRef = recommendationsRef.push();
+    await newRecommendationRef.set({
+      data: recommendation,
+      timestamp: admin.database.ServerValue.TIMESTAMP,
     });
 
     console.log('Recommendation saved successfully.');

@@ -1,34 +1,41 @@
-import { Storage } from '@google-cloud/storage';
+import admin from 'firebase-admin';
 import path from 'path';
 
-const storageBucketName = 'test-json-latest'; // Update with the correct storage bucket name
-const storageFileName = 'saved-recommendations.json'; // Update with the correct JSON file name
-const serviceAccountKeyPath = path.join(process.cwd(), 'traceback-ai-FIR.json'); // Update with the path to your service account key file
+const firebaseDatabaseURL = 'https://traceback-ai-43af3-default-rtdb.europe-west1.firebasedatabase.app/'; // Replace with your Firebase Realtime Database URL
+
+// Update with the path to your service account key file
+const serviceAccountKeyPath = path.join(process.cwd(), 'traceback-ai-rtd.json');
+
+// Initialize the Firebase Admin SDK
+if (admin.apps.length === 0) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccountKeyPath),
+    databaseURL: firebaseDatabaseURL,
+  });
+}
 
 export default async function handler(req, res) {
   try {
-    // Create a new instance of the Google Cloud Storage client with the service account key file
-    const storage = new Storage({ keyFilename: serviceAccountKeyPath });
+    // Get a reference to the Firebase Realtime Database
+    const database = admin.database();
 
-    // Get a reference to the bucket
-    const bucket = storage.bucket(storageBucketName);
+    // Get a reference to the "recommendations" node in the database
+    const recommendationsRef = database.ref('recommendations');
 
-    // Get a reference to the file
-    const file = bucket.file(storageFileName);
+    // Fetch all the recommendations
+    const snapshot = await recommendationsRef.once('value');
+    const recommendations = snapshot.val();
 
-    // Download the file contents
-    const [fileContent] = await file.download();
+    // Transform the recommendations into an array with document names
+    const recommendationsArray = Object.entries(recommendations).map(([docName, recommendation]) => ({
+      docName,
+      ...recommendation,
+    }));
 
-    // Parse the JSON content
-    const existingData = JSON.parse(fileContent.toString());
-
-    // Log the existing data
-    console.log('Received data:', existingData);
-
-    // Return the existing data as the response
-    res.status(200).json(existingData);
+    console.log('Fetched recommendations:', recommendationsArray);
+    res.status(200).json(recommendationsArray);
   } catch (error) {
-    console.log('An error occurred while fetching the data:', error);
-    res.status(500).json({ message: 'An error occurred while fetching data' });
+    console.log('An error occurred while fetching the recommendations:', error);
+    res.status(500).json({ message: 'An error occurred while fetching the recommendations' });
   }
 }
