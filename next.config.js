@@ -6,7 +6,7 @@ module.exports = {
   env: {
     API_URL:'https://tracebackaigptv4-4t2r2e6xka-uc.a.run.app/api/new-gpt',
     RECC_API_URL:'https://tracebackaigpt-reccomendationsv3-4t2r2e6xka-uc.a.run.app/api/new-gpt',
-    CODE_SUMM_URL:'https://tracebackaigptcodesummary-4t2r2e6xka-uc.a.run.app',
+    CODE_SUMM_URL:'https://tracebackaigptcodesummary-4t2r2e6xka-uc.a.run.app/api/new-gpt',
   },
   webpack: config => {
     config.resolve.alias = {
