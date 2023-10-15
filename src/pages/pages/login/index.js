@@ -68,9 +68,6 @@ const LoginPage = () => {
   // Predefined list of allowed email addresses
   const allowedEmails = [
     'priyagnanasekaran81@gmail.com',
-    'saskia.hj.welsch@gmail.com',
-    'responsibletechhub@gmail.com',
-    'heideker.philipp@gmail.com',
     'deepakaurjay7@gmail.com',
     'ddps628@gmail.com'
   ]
